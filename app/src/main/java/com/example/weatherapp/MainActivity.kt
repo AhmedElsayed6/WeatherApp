@@ -1,7 +1,6 @@
 package com.example.weatherapp
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val actionBar : ActionBar? = supportActionBar
+        val actionBar: ActionBar? = supportActionBar
         actionBar?.setHomeAsUpIndicator(R.drawable.icon_menu)
         actionBar?.setDisplayHomeAsUpEnabled(true)
         actionBar?.setDisplayShowHomeEnabled(true)
@@ -29,9 +28,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == android.R.id.home  )
-        {
-            if(binding.drawerLayout.isDrawerOpen(GravityCompat.START))
+        if (item.itemId == android.R.id.home) {
+
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START))
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
             else
                 binding.drawerLayout.openDrawer(GravityCompat.START)

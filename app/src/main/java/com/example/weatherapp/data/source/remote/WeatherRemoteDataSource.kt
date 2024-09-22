@@ -13,7 +13,10 @@ class WeatherRemoteDataSource private constructor(private val apiService: ApiSer
     private val apiKey = BuildConfig.API_KEY
 
     companion object {
+        @Volatile
         private var instance: WeatherRemoteDataSource? = null
+
+        @Synchronized
         fun getInstance(
             apiService: ApiService
         ): WeatherRemoteDataSource {

@@ -8,4 +8,14 @@
     <string name="Cloud">Cloud</string>
     <string name="HourlyForecast">Hourly Forecast</string>
     <string name="DailyForecast">Daily Forecast</string>
+    <string name="Tomorrow">Tomorrow</string>
+
+    <string name="InitialSetup">Initial Setup</string>
+    <string name="Location">Location</string>
+    <string name="Language">Language</string>
+    <string name="Notification">Allow Notifications</string>
+    <string name="Ok">Ok</string>
+    <string name="AllowPermissions">Allow Location</string>
+    <string name="Allow">Allow</string>
+    <string name="AllowPermText">"Please allow the app to access your location."</string>
 </resources>

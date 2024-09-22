@@ -2,7 +2,11 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/bai_jamjuree_light</item>
+        <item>@font/cagliostro</item>
+        <item>@font/livvic_thin</item>
         <item>@font/nixie_one</item>
+        <item>@font/patrick_hand</item>
+        <item>@font/righteous</item>
         <item>@font/roboto_flex</item>
     </array>
 </resources>

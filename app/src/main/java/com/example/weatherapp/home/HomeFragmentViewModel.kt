@@ -30,6 +30,10 @@ class HomeFragmentViewModel(private val weatherRepository: WeatherRepository) : 
         }
     }
 
+    private fun getLocationSettings(){
+        weatherRepository.
+    }
+
 
 
 }

@@ -34,11 +34,11 @@ class WeatherSharedPreferenceDataSource private constructor(private val context:
     }
 
     fun getUnitTemp(): String {
-        return sp.getString("temp", "standard")!!
+        return sp.getString("temp", "K")!!
     }
 
-    fun getUnitPressure(): String {
-        return sp.getString("pressure", "standard")!!
+    fun getUnitWind(): String {
+        return sp.getString("wind", "meter/sec")!!
     }
 
     fun getNotificationSettings(): String {
@@ -71,8 +71,8 @@ class WeatherSharedPreferenceDataSource private constructor(private val context:
         editor.putString("temp", unit).apply()
     }
 
-    fun setUnitPressure(unit: String) {
-        editor.putString("pressure", unit).apply()
+    fun setUnitWind(unit: String) {
+        editor.putString("wind", unit).apply()
     }
 
     fun setNotificationSettings(key: String) {

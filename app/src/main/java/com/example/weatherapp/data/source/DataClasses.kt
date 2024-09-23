@@ -11,6 +11,22 @@ data class WeatherData(
     val name: String,
 )
 
+data class ForecastData(
+    val list: List<WeatherData>,
+    val city: City
+)
+
+data class City(
+    val id: Int,
+    val name: String,
+    val coord: Coord,
+    val country: String,
+    val population: Int,
+    val timezone: Int,
+    val sunrise: Long,
+    val sunset: Long
+)
+
 // done
 data class Coord(
     val lon: Double,
@@ -23,16 +39,21 @@ data class Weather(
     val description: String,
     val icon: String
 )
+
 // done
 data class Main(
     val temp: Double,
     val pressure: Long,
-    val humidity: Long
+    val humidity: Long,
+    val temp_min: Double,
+    val temp_max: Double
 )
+
 //done
 data class Wind(
     val speed: Double,
 )
+
 //done
 data class Clouds(
     val all: Long

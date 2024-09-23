@@ -1,6 +1,7 @@
 package com.example.weatherapp.network
 
 
+import com.example.weatherapp.data.source.ForecastData
 import com.example.weatherapp.data.source.WeatherData
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -15,7 +16,6 @@ interface ApiService {
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
         @Query("appid") apiKey: String,
-        @Query("units") units: String,
         @Query("lang") lang: String
     ): Response<WeatherData>
 
@@ -23,14 +23,11 @@ interface ApiService {
     suspend fun getForecastData(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("cnt") cnt: Int = 8,
         @Query("appid") apiKey: String,
-        @Query("units") units: String,
         @Query("lang") lang: String,
-    ): WeatherData
+    ): Response<ForecastData>
 
 }
-
 
 
 object RetrofitHelper {
@@ -41,7 +38,7 @@ object RetrofitHelper {
         .build()
 }
 
-object API{
+object API {
     val retrofitService by lazy {
         RetrofitHelper.retrofitInstance.create(ApiService::class.java)
     }

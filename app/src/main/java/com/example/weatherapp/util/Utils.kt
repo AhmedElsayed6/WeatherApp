@@ -1,6 +1,9 @@
 package com.example.weatherapp.util
 
 import com.example.weatherapp.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 fun String.toDrawable(): Int {
     when (this) {
@@ -24,4 +27,16 @@ fun String.toDrawable(): Int {
         "50n" -> return R.drawable.i50n
         else -> return R.drawable.ic_launcher_foreground
     }
+}
+
+fun Long.toDaysTime(): String {
+    val date = Date(this * 1000L)
+    val format = SimpleDateFormat("EEEE", Locale.getDefault())
+    return format.format(date)
+}
+
+fun Long.toAMPM(): String {
+    val date = Date(this * 1000L)
+    val format = SimpleDateFormat("hh:mm a", Locale.getDefault())
+    return format.format(date)
 }

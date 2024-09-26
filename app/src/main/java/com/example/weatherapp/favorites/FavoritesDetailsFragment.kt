@@ -1,19 +1,11 @@
-package com.example.weatherapp.home
+package com.example.weatherapp.favorites
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -21,13 +13,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weatherapp.MainActivity
+import com.example.weatherapp.R
 import com.example.weatherapp.data.source.WeatherRepository
 import com.example.weatherapp.data.source.local.AppDatabase
 import com.example.weatherapp.data.source.local.WeatherLocalDataSource
 import com.example.weatherapp.data.source.remote.WeatherRemoteDataSource
 import com.example.weatherapp.data.source.sharedPrefrence.WeatherSharedPreferenceDataSource
 import com.example.weatherapp.databinding.FragmentHomeBinding
+import com.example.weatherapp.home.DailyRecyclerViewAdapter
+import com.example.weatherapp.home.HomeFragmentViewModel
+import com.example.weatherapp.home.HourlyRecyclerViewAdapter
 import com.example.weatherapp.network.API
 import com.example.weatherapp.network.ForecastState
 import com.example.weatherapp.network.WeatherState
@@ -35,14 +30,11 @@ import com.example.weatherapp.util.WeatherViewModelFactory
 import com.example.weatherapp.util.toAMPM
 import com.example.weatherapp.util.toDaysTime
 import com.example.weatherapp.util.toDrawable
-import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.launch
 
-const val REQUEST_LOCATION_CODE = 2005
+class FavoritesDetailsFragment : Fragment() {
 
-class HomeFragment : Fragment() {
-
-
+    private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeFragmentViewModel by lazy {
         val factory = WeatherViewModelFactory(
             WeatherRepository.getInstance(
@@ -55,8 +47,6 @@ class HomeFragment : Fragment() {
         )
         ViewModelProvider(this, factory)[HomeFragmentViewModel::class.java]
     }
-    private lateinit var binding: FragmentHomeBinding
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,29 +56,6 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        
-
-        binding.btnAllowPerm.setOnClickListener {
-            requestPerms()
-        }
-        binding.btnEnableLocation.setOnClickListener {
-            enableLocationServices()
-        }
-
-    }
-
-    override fun onStart() {
-        super.onStart()
-        (activity as MainActivity).supportActionBar?.title = "Home"
-        if (viewModel.getLocationSettings() == "GPS") {
-            initPermissions()
-        } else {
-
-        }
-    }
 
     @SuppressLint("RepeatOnLifecycleWrongUsage")
     private fun launchStateFlows() {
@@ -162,95 +129,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun requestPerms() {
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        ) {
-            Toast.makeText(
-                requireContext(),
-                "Please allow permission manually",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        requestPermissions(
-            arrayOf(
-                android.Manifest.permission.ACCESS_FINE_LOCATION,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ),
-            REQUEST_LOCATION_CODE
-        )
-    }
-
-    private fun initPermissions() {
-        if (checkPermissions()) {
-            binding.cvPermissions.visibility = View.GONE
-            binding.cvLocation.visibility = View.VISIBLE
-            if (isLocationEnabled()) {
-                binding.cvLocation.visibility = View.GONE
-
-                viewModel.getWeatherData()
-                viewModel.getForecastWeatherData()
-                launchStateFlows()
-            }
-        } else {
-            requestPermissions(
-                arrayOf(
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                REQUEST_LOCATION_CODE
-            )
-        }
-    }
-
-    private fun checkPermissions(): Boolean {
-        return requireContext().checkSelfPermission(
-            android.Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-                &&
-                requireContext().checkSelfPermission(
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun isLocationEnabled(): Boolean {
-        val locationManager: LocationManager =
-            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    }
-
-    private fun enableLocationServices() {
-        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-        startActivity(intent)
-    }
-
-
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Log.i("HEREEE", "onRequestPermResult: " + "Granted?")
-        if (requestCode == REQUEST_LOCATION_CODE) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                binding.cvPermissions.visibility = View.GONE
-                binding.cvLocation.visibility = View.VISIBLE
-                if (isLocationEnabled()) {
-                    binding.cvLocation.visibility = View.GONE
-                    viewModel.getWeatherData()
-                    viewModel.getForecastWeatherData()
-                    launchStateFlows()
-                }
-            }
-        }
-
     }
 
 

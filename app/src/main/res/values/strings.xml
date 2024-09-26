@@ -21,4 +21,11 @@
     <string name="EnableLocation">Enable Location</string>
     <string name="EnableLocationText">Please enable location to use the service.</string>
     <string name="Enable">Enable</string>
+    <string name="SearchForLocation">Search for location</string>
+    <string name="AddToFavText">Add this location to your favorites?</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    <string name="Latitude">Latitude</string>
+    <string name="Longitude">Longitude</string>
+    <string name="UpdateHomeLocationText">Set the main location to this one?</string>
 </resources>

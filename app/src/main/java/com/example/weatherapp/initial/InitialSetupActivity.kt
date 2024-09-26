@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.weatherapp.MainActivity
 import com.example.weatherapp.data.source.WeatherRepository
+import com.example.weatherapp.data.source.local.AppDatabase
 import com.example.weatherapp.data.source.local.WeatherLocalDataSource
 import com.example.weatherapp.data.source.remote.WeatherRemoteDataSource
 import com.example.weatherapp.data.source.sharedPrefrence.WeatherSharedPreferenceDataSource
@@ -24,7 +25,7 @@ class InitialSetupActivity : AppCompatActivity() {
     private val viewModel: InitialSetupViewModel by lazy {
         val factory = WeatherViewModelFactory(
             WeatherRepository.getInstance(
-                WeatherLocalDataSource(),
+                WeatherLocalDataSource.getInstance(AppDatabase.getInstance(this).weatherDao()),
                 WeatherRemoteDataSource.getInstance(API.retrofitService),
                 WeatherSharedPreferenceDataSource.getInstance(this)
             )

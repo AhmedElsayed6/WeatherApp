@@ -3,8 +3,10 @@ package com.example.weatherapp.util
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.data.source.WeatherRepository
+import com.example.weatherapp.favorites.FavoritesFragmentViewModel
 import com.example.weatherapp.home.HomeFragmentViewModel
 import com.example.weatherapp.initial.InitialSetupViewModel
+import com.example.weatherapp.map.MapActivityViewModel
 
 class WeatherViewModelFactory(private val repository: WeatherRepository) :
     ViewModelProvider.Factory {
@@ -16,6 +18,13 @@ class WeatherViewModelFactory(private val repository: WeatherRepository) :
             ) as T
 
             modelClass.isAssignableFrom(InitialSetupViewModel::class.java) -> InitialSetupViewModel(
+                repository
+            ) as T
+
+            modelClass.isAssignableFrom(MapActivityViewModel::class.java) -> MapActivityViewModel(
+                repository
+            ) as T
+            modelClass.isAssignableFrom(FavoritesFragmentViewModel::class.java) -> FavoritesFragmentViewModel(
                 repository
             ) as T
 

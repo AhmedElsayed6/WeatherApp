@@ -1,5 +1,9 @@
 package com.example.weatherapp.data.source
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.io.Serializable
+
 data class WeatherData(
     val coord: Coord,
     val weather: List<Weather>,
@@ -58,3 +62,11 @@ data class Wind(
 data class Clouds(
     val all: Long
 )
+
+@Entity(tableName = "FavoritesTable")
+data class FavData(
+    var city: String, var latitude: Double, var longitude: Double
+) : Serializable {
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
+}

@@ -28,15 +28,15 @@
                 android:fontFamily="@font/roboto_flex"
                 android:text="Now"
                 android:textAlignment="center"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/ivHourlyImage"
-                android:layout_width="80dp"
-                android:layout_height="100dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:scaleType="fitCenter"
@@ -53,7 +53,7 @@
                 android:fontFamily="@font/roboto_flex"
                 android:text="25 K/ 24K"
                 android:textAlignment="center"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

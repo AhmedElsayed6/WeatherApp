@@ -1,5 +1,6 @@
 package com.example.weatherapp.data.source
 
+import com.example.weatherapp.data.source.local.FavoritesState
 import com.example.weatherapp.data.source.local.WeatherLocalDataSource
 import com.example.weatherapp.data.source.remote.WeatherRemoteDataSource
 import com.example.weatherapp.data.source.sharedPrefrence.WeatherSharedPreferenceDataSource
@@ -25,12 +26,11 @@ class WeatherRepository private constructor(
             weatherSharedPreferenceDataSource: WeatherSharedPreferenceDataSource
         ): WeatherRepository {
             return instance ?: synchronized(this) {
-                val tempInstance =
-                    WeatherRepository(
-                        weatherLocalDataSource,
-                        weatherRemoteDataSource,
-                        weatherSharedPreferenceDataSource
-                    )
+                val tempInstance = WeatherRepository(
+                    weatherLocalDataSource,
+                    weatherRemoteDataSource,
+                    weatherSharedPreferenceDataSource
+                )
                 instance = tempInstance
                 tempInstance
             }
@@ -40,27 +40,25 @@ class WeatherRepository private constructor(
 
     fun getCurrentWeather(): Flow<WeatherState> = flow {
         try {
-            val response = weatherRemoteDataSource.getCurrentWeatherData(12.0, 12.0,  "en")
+            val response = weatherRemoteDataSource.getCurrentWeatherData(12.0, 12.0, "en")
             if (response.isSuccessful) {
                 emit(WeatherState.Success(response.body()!!))
-            } else
-                emit(WeatherState.Error("Error Found"))
+            } else emit(WeatherState.Error("Error Found"))
         } catch (e: Exception) {
             emit(WeatherState.Error("Error Found"))
         }
     }
+
     fun getCurrentForecastWeather(): Flow<ForecastState> = flow {
         try {
-            val response = weatherRemoteDataSource.getForecastWeatherData(12.0, 12.0,  "en")
+            val response = weatherRemoteDataSource.getForecastWeatherData(12.0, 12.0, "en")
             if (response.isSuccessful) {
                 emit(ForecastState.Success(response.body()!!))
-            } else
-                emit(ForecastState.Error(response.message()))
+            } else emit(ForecastState.Error(response.message()))
         } catch (e: Exception) {
             emit(ForecastState.Error(e.message!!))
         }
     }
-
 
 
     fun setFirstTime() {
@@ -103,11 +101,30 @@ class WeatherRepository private constructor(
         return weatherSharedPreferenceDataSource.getLocationSettings()
     }
 
-    fun getUnitWind() : String{
+    fun getUnitWind(): String {
         return weatherSharedPreferenceDataSource.getUnitWind()
     }
-    fun getUnitTemp() : String{
+
+    fun getUnitTemp(): String {
         return weatherSharedPreferenceDataSource.getUnitTemp()
     }
+
+    suspend fun addToFav(city: String, lat: Double, lon: Double) {
+        weatherLocalDataSource.addToFav(city, lat, lon)
+    }
+
+    suspend fun getAllFavorites(): Flow<FavoritesState> {
+        return flow {
+            weatherLocalDataSource.getAllFavorites().collect() { favList ->
+                emit(FavoritesState.Success(favList))
+                }
+        }
+
+    }
+    suspend fun deleteProduct(product: FavData) {
+        weatherLocalDataSource.deleteProduct(product)
+    }
+
+
 
 }

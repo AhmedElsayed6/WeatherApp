@@ -18,6 +18,7 @@
             android:layout_height="150dp"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="50dp"
+            android:translationZ="2dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -33,7 +34,6 @@
             android:layout_marginStart="40dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="40dp"
-            android:visibility="gone"
             app:cardCornerRadius="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -191,7 +191,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clHomeFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cvHomePart1"
@@ -385,294 +386,18 @@
                         app:layout_constraintStart_toEndOf="@+id/lottieAnimationView5"
                         app:layout_constraintTop_toTopOf="@+id/lottieAnimationView5" />
 
-                    <TextView
-                        android:id="@+id/textView12"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDailyForecast"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
-                        android:text="@string/Tomorrow"
-                        app:layout_constraintStart_toStartOf="@+id/lottieAnimationView5"
-                        app:layout_constraintTop_toBottomOf="@+id/lottieAnimationView5" />
-
-                    <ImageView
-                        android:id="@+id/ivTomorrowWeatherIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/i04d"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView12"
-                        app:layout_constraintStart_toStartOf="@+id/textView10"
-                        app:layout_constraintTop_toTopOf="@+id/textView12" />
-
-                    <ImageView
-                        android:id="@+id/ivDay1WeatherIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/i04d"
-                        app:layout_constraintBottom_toBottomOf="@+id/tvDay1Name"
-                        app:layout_constraintStart_toStartOf="@+id/textView10"
-                        app:layout_constraintTop_toTopOf="@+id/tvDay1Name" />
-
-                    <TextView
-                        android:id="@+id/tvTomorrowWeatherDesc"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Clear Skye"
-                        app:layout_constraintBottom_toBottomOf="@+id/ivTomorrowWeatherIcon"
-                        app:layout_constraintStart_toEndOf="@+id/ivTomorrowWeatherIcon"
-                        app:layout_constraintTop_toTopOf="@+id/ivTomorrowWeatherIcon" />
-
-                    <TextView
-                        android:id="@+id/tvTomorrowTemp"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tvTomorrowWeatherDesc" />
-
-                    <View
-                        android:id="@+id/divider"
-                        android:layout_width="369dp"
-                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="20dp"
-                        android:background="?android:attr/listDivider"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ivTomorrowWeatherIcon" />
-
-                    <TextView
-                        android:id="@+id/tvDay1Name"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="TextView"
-                        app:layout_constraintStart_toStartOf="@+id/lottieAnimationView5"
-                        app:layout_constraintTop_toBottomOf="@+id/divider" />
-
-                    <TextView
-                        android:id="@+id/tvDay1WeatherDesc"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Clear Skye"
-                        app:layout_constraintBottom_toBottomOf="@+id/ivDay1WeatherIcon"
-                        app:layout_constraintStart_toEndOf="@+id/ivDay1WeatherIcon"
-                        app:layout_constraintTop_toTopOf="@+id/ivDay1WeatherIcon" />
-
-                    <TextView
-                        android:id="@+id/tvDay1WeatherTemp"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tvDay1WeatherDesc" />
-
-                    <View
-                        android:id="@+id/divider2"
-                        android:layout_width="369dp"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
-                        android:background="?android:attr/listDivider"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ivDay1WeatherIcon" />
-
-
-                    <TextView
-                        android:id="@+id/tvDayName"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="TextView"
-                        app:layout_constraintStart_toStartOf="@+id/lottieAnimationView5"
-                        app:layout_constraintTop_toBottomOf="@+id/divider2" />
-
-
-                    <ImageView
-                        android:id="@+id/ivDayWeatherIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/i04d"
-                        app:layout_constraintBottom_toBottomOf="@+id/tvDayName"
-                        app:layout_constraintStart_toStartOf="@+id/textView10"
-                        app:layout_constraintTop_toTopOf="@+id/tvDayName" />
-
-                    <TextView
-                        android:id="@+id/tvDayWeatherDesc"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Clear Skye"
-                        app:layout_constraintBottom_toBottomOf="@+id/ivDayWeatherIcon"
-                        app:layout_constraintStart_toEndOf="@+id/ivDayWeatherIcon"
-                        app:layout_constraintTop_toTopOf="@+id/ivDayWeatherIcon" />
-
-                    <TextView
-                        android:id="@+id/tvDayWeatherTemp"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tvDayWeatherDesc" />
-
-                    <View
-                        android:id="@+id/divider55"
-                        android:layout_width="369dp"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
-                        android:background="?android:attr/listDivider"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ivDayWeatherIcon" />
-
-
-                    <TextView
-                        android:id="@+id/tvDay3Name"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="TextView"
-                        app:layout_constraintStart_toStartOf="@+id/lottieAnimationView5"
-                        app:layout_constraintTop_toBottomOf="@+id/divider55" />
-
-
-                    <ImageView
-                        android:id="@+id/ivDay3WeatherIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/i04d"
-                        app:layout_constraintBottom_toBottomOf="@+id/tvDay3Name"
-                        app:layout_constraintStart_toStartOf="@+id/textView10"
-                        app:layout_constraintTop_toTopOf="@+id/tvDay3Name" />
-
-                    <TextView
-                        android:id="@+id/tvDay3WeatherDesc"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Clear Skye"
-                        app:layout_constraintBottom_toBottomOf="@+id/ivDay3WeatherIcon"
-                        app:layout_constraintStart_toEndOf="@+id/ivDay3WeatherIcon"
-                        app:layout_constraintTop_toTopOf="@+id/ivDay3WeatherIcon" />
-
-                    <TextView
-                        android:id="@+id/tvDay3WeatherTemp"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tvDay3WeatherDesc" />
-
-                    <View
-                        android:id="@+id/divide1"
-                        android:layout_width="369dp"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
-                        android:background="?android:attr/listDivider"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ivDay3WeatherIcon" />
-
-
-                    <TextView
-                        android:id="@+id/tvDay4Name"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="TextView"
-                        app:layout_constraintStart_toStartOf="@+id/lottieAnimationView5"
-                        app:layout_constraintTop_toBottomOf="@+id/divide1" />
-
-
-                    <ImageView
-                        android:id="@+id/ivDay4WeatherIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/i04d"
-                        app:layout_constraintBottom_toBottomOf="@+id/tvDay4Name"
-                        app:layout_constraintStart_toStartOf="@+id/textView10"
-                        app:layout_constraintTop_toTopOf="@+id/tvDay4Name" />
-
-                    <TextView
-                        android:id="@+id/tvDay4WeatherDesc"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Clear Skye"
-                        app:layout_constraintBottom_toBottomOf="@+id/ivDay4WeatherIcon"
-                        app:layout_constraintStart_toEndOf="@+id/ivDay4WeatherIcon"
-                        app:layout_constraintTop_toTopOf="@+id/ivDay4WeatherIcon" />
-
-                    <TextView
-                        android:id="@+id/tvDay4WeatherTemp"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tvDay4WeatherDesc" />
-
-                    <View
-                        android:id="@+id/divide2"
-                        android:layout_width="369dp"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
-                        android:background="?android:attr/listDivider"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ivDay4WeatherIcon" />
-
-
-                    <TextView
-                        android:id="@+id/tvDay5Name"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="30dp"
-                        android:text="TextView"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/lottieAnimationView5"
-                        app:layout_constraintTop_toBottomOf="@+id/divide2" />
-
-
-                    <ImageView
-                        android:id="@+id/ivDay5WeatherIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/i04d"
-                        app:layout_constraintBottom_toBottomOf="@+id/tvDay5Name"
-                        app:layout_constraintStart_toStartOf="@+id/textView10"
-                        app:layout_constraintTop_toTopOf="@+id/tvDay5Name" />
-
-                    <TextView
-                        android:id="@+id/tvDay5WeatherDesc"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Clear Skye"
-                        app:layout_constraintBottom_toBottomOf="@+id/ivDay5WeatherIcon"
-                        app:layout_constraintStart_toEndOf="@+id/ivDay5WeatherIcon"
-                        app:layout_constraintTop_toTopOf="@+id/ivDay5WeatherIcon" />
-
-                    <TextView
-                        android:id="@+id/tvDay5WeatherTemp"
-                        style="@style/dailyTextViewItems"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tvDay5WeatherDesc" />
-
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/lottieAnimationView5" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -19,10 +19,6 @@ class HomeFragmentViewModel(private val weatherRepository: WeatherRepository) : 
     private val _currentForecastWeatherState = MutableStateFlow<ForecastState>(ForecastState.Loading)
     val currentForecastWeather: StateFlow<ForecastState> = _currentForecastWeatherState.asStateFlow()
 
-    init {
-        //    getWeatherData()
-    }
-
     fun getWeatherData() {
         viewModelScope.launch(Dispatchers.IO) {
             weatherRepository.getCurrentWeather().collect {

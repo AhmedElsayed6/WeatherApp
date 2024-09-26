@@ -8,6 +8,7 @@ import com.example.weatherapp.favorites.FavoritesFragmentViewModel
 import com.example.weatherapp.home.HomeFragmentViewModel
 import com.example.weatherapp.initial.InitialSetupViewModel
 import com.example.weatherapp.map.MapActivityViewModel
+import com.example.weatherapp.settings.SettingsFragmentViewModel
 
 class WeatherViewModelFactory(private val repository: WeatherRepository) :
     ViewModelProvider.Factory {
@@ -31,6 +32,9 @@ class WeatherViewModelFactory(private val repository: WeatherRepository) :
             ) as T
 
             modelClass.isAssignableFrom(FavoritesDetailsFragmentViewModel::class.java) -> FavoritesDetailsFragmentViewModel(
+                repository
+            ) as T
+            modelClass.isAssignableFrom(SettingsFragmentViewModel::class.java) -> SettingsFragmentViewModel(
                 repository
             ) as T
 

@@ -10,7 +10,6 @@
         android:id="@+id/lottieAnimationView2422"
         android:layout_width="132dp"
         android:layout_height="91dp"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"

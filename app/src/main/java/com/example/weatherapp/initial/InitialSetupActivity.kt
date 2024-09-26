@@ -2,7 +2,6 @@ package com.example.weatherapp.initial
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -15,8 +14,8 @@ import com.example.weatherapp.data.source.remote.WeatherRemoteDataSource
 import com.example.weatherapp.data.source.sharedPrefrence.WeatherSharedPreferenceDataSource
 import com.example.weatherapp.databinding.ActivityInitialSetupBinding
 import com.example.weatherapp.network.API
+import com.example.weatherapp.settings.SettingsFragmentViewModel
 import com.example.weatherapp.util.WeatherViewModelFactory
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -59,7 +58,7 @@ class InitialSetupActivity : AppCompatActivity() {
                     findViewById<RadioButton>(binding.radioGroupLanguage.checkedRadioButtonId).text.toString()
             }
 
-            viewModel.setUpData(location,language,notification)
+            viewModel.setUpData(location, language, notification)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()

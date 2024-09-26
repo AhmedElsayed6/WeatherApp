@@ -18,7 +18,6 @@ interface WeatherDao {
     @Query("Select * from FavoritesTable")
     fun getAllFavorites(): Flow<List<FavData>>
 
-
     @Delete
     suspend fun deleteProduct(favData: FavData)
 }

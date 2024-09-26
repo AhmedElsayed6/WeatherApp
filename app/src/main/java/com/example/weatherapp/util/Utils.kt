@@ -40,3 +40,17 @@ fun Long.toAMPM(): String {
     val format = SimpleDateFormat("hh:mm a", Locale.getDefault())
     return format.format(date)
 }
+
+
+fun Double.toMilesPerHour(): Double {
+    val conversionFactor = 2.23694
+    return this * conversionFactor
+}
+
+fun Double.toKelvin(): Double {
+    return this + 273.15
+}
+
+fun Double.toFahrenheit(): Double {
+    return (this * 9 / 5) + 32
+}

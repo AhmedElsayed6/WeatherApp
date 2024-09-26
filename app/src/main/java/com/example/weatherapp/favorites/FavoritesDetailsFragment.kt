@@ -2,7 +2,6 @@ package com.example.weatherapp.favorites
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +12,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weatherapp.R
+import com.example.weatherapp.MainActivity
+import com.example.weatherapp.data.source.FavData
 import com.example.weatherapp.data.source.WeatherRepository
 import com.example.weatherapp.data.source.local.AppDatabase
 import com.example.weatherapp.data.source.local.WeatherLocalDataSource
 import com.example.weatherapp.data.source.remote.WeatherRemoteDataSource
 import com.example.weatherapp.data.source.sharedPrefrence.WeatherSharedPreferenceDataSource
-import com.example.weatherapp.databinding.FragmentHomeBinding
+import com.example.weatherapp.databinding.FragmentFavoritesDetailsBinding
 import com.example.weatherapp.home.DailyRecyclerViewAdapter
-import com.example.weatherapp.home.HomeFragmentViewModel
 import com.example.weatherapp.home.HourlyRecyclerViewAdapter
 import com.example.weatherapp.network.API
 import com.example.weatherapp.network.ForecastState
@@ -30,12 +29,23 @@ import com.example.weatherapp.util.WeatherViewModelFactory
 import com.example.weatherapp.util.toAMPM
 import com.example.weatherapp.util.toDaysTime
 import com.example.weatherapp.util.toDrawable
+import com.example.weatherapp.util.toFahrenheit
+import com.example.weatherapp.util.toKelvin
+import com.example.weatherapp.util.toMilesPerHour
 import kotlinx.coroutines.launch
 
 class FavoritesDetailsFragment : Fragment() {
 
-    private lateinit var binding: FragmentHomeBinding
-    private val viewModel: HomeFragmentViewModel by lazy {
+    private lateinit var binding: FragmentFavoritesDetailsBinding
+    private var favData: FavData? = null
+    private val tempUnit: String by lazy {
+        viewModel.getTempUnit()
+    }
+    private val speedUnit: String by lazy {
+        viewModel.getWindSpeedUnit()
+    }
+
+    private val viewModel: FavoritesDetailsFragmentViewModel by lazy {
         val factory = WeatherViewModelFactory(
             WeatherRepository.getInstance(
                 WeatherLocalDataSource.getInstance(
@@ -45,50 +55,72 @@ class FavoritesDetailsFragment : Fragment() {
                 WeatherSharedPreferenceDataSource.getInstance(this.requireContext())
             )
         )
-        ViewModelProvider(this, factory)[HomeFragmentViewModel::class.java]
+        ViewModelProvider(this, factory)[FavoritesDetailsFragmentViewModel::class.java]
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding = FragmentFavoritesDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        favData = arguments?.getSerializable("data") as FavData
+        launchStateFlows()
+        viewModel.getWeatherData(favData!!.latitude, favData!!.longitude)
+        viewModel.getForecast(favData!!.latitude, favData!!.longitude)
+
+
+    }
 
     @SuppressLint("RepeatOnLifecycleWrongUsage")
     private fun launchStateFlows() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.currentWeather.collect {
+                viewModel.currentWeather.collect { it ->
                     when (it) {
                         is WeatherState.Error -> {
-                            Log.i("here", "onViewCreated: " + it.message)
+
                         }
 
                         is WeatherState.Loading -> {
-                            binding.pb.visibility = View.VISIBLE
+
                         }
 
                         is WeatherState.Success -> {
-                            binding.pb.visibility = View.GONE
+                            binding.pb2.visibility = View.GONE
                             binding.clHomeFragment.visibility = View.VISIBLE
                             binding.tvDateAndTime.text =
                                 it.weatherData.dt.toDaysTime() + " " + it.weatherData.dt.toAMPM()
-                            binding.tvCityName.text = it.weatherData.name
-                            binding.tvTemp.text =
-                                it.weatherData.main.temp.toString() + " ${viewModel.getUnitTemp()}"
+                            binding.tvCityName.text = favData!!.city
+                            when (tempUnit) {
+                                "C" -> binding.tvTemp.text =
+                                    it.weatherData.main.temp.toString() + " $tempUnit"+"°"
+
+                                "K" -> binding.tvTemp.text =
+                                    it.weatherData.main.temp.toKelvin().toString() + " $tempUnit"+"°"
+
+                                "F" -> binding.tvTemp.text =
+                                    it.weatherData.main.temp.toFahrenheit()
+                                        .toString() + " $tempUnit"+"°"
+                            }
                             binding.tvDescription.text =
-                                it.weatherData.weather.get(0).description.replaceFirstChar { it.uppercaseChar() }
-                            binding.ivImage.setImageResource(it.weatherData.weather.get(0).icon.toDrawable())
-                            binding.tvWindSpeed.text =
-                                it.weatherData.wind.speed.toString() + " ${viewModel.getWindSpeedUnit()}"
+                                it.weatherData.weather[0].description.replaceFirstChar { it.uppercaseChar() }
+                            binding.ivImage.setImageResource(it.weatherData.weather[0].icon.toDrawable())
+                            when (speedUnit) {
+                                "ms" -> binding.tvWindSpeed.text =
+                                    it.weatherData.wind.speed.toString() + " Meter/Sec"
+                                "mh" -> binding.tvTemp.text =
+                                    it.weatherData.main.temp.toMilesPerHour().toString() + " Mile/Hour"
+
+                            }
                             binding.tvHumidity.text = it.weatherData.main.humidity.toString() + " %"
                             binding.tvPressure.text =
                                 it.weatherData.main.pressure.toString() + " hpa"
                             binding.tvCloud.text = it.weatherData.clouds.all.toString() + " %"
-                            Log.i("here", "onViewCreated weather Data: " + it.weatherData.weather)
                         }
                     }
                 }
@@ -99,11 +131,11 @@ class FavoritesDetailsFragment : Fragment() {
                 viewModel.currentForecastWeather.collect {
                     when (it) {
                         is ForecastState.Error -> {
-                            Log.i("here", "onViewCreated: forecast " + it.message)
+
                         }
 
                         is ForecastState.Loading -> {
-                            Log.i("here", "onViewCreated: " + it.toString())
+
                         }
 
                         is ForecastState.Success -> {
@@ -111,7 +143,7 @@ class FavoritesDetailsFragment : Fragment() {
                             managerHourly.setOrientation(RecyclerView.HORIZONTAL)
                             val managerDaily = LinearLayoutManager(requireContext())
                             managerDaily.setOrientation(RecyclerView.VERTICAL)
-                            val tempUnit: String = viewModel.getUnitTemp()
+                            val tempUnit: String = viewModel.getTempUnit()
                             binding.rvHourlyForecast.layoutManager = managerHourly
                             binding.rvHourlyForecast.adapter = HourlyRecyclerViewAdapter(
                                 it.forecastData.list.take(8),
@@ -123,7 +155,6 @@ class FavoritesDetailsFragment : Fragment() {
                                 it.forecastData.list.filterIndexed { index, _ -> index == 0 || (index + 1) % 8 == 0 },
                                 tempUnit
                             )
-                            // initDailyItemsUi(it.forecastData.list, tempUnit)
                         }
                     }
                 }
@@ -131,5 +162,14 @@ class FavoritesDetailsFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        (activity as MainActivity).supportActionBar?.hide()
+    }
+
+    override fun onDestroy() {
+        (activity as MainActivity).supportActionBar?.show()
+        super.onDestroy()
+    }
 
 }

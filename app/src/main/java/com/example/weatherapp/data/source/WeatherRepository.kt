@@ -38,9 +38,9 @@ class WeatherRepository private constructor(
     }
 
 
-    fun getCurrentWeather(): Flow<WeatherState> = flow {
+    fun getCurrentWeather(lat: Double = 10.0, long: Double = 10.0): Flow<WeatherState> = flow {
         try {
-            val response = weatherRemoteDataSource.getCurrentWeatherData(12.0, 12.0, "en")
+            val response = weatherRemoteDataSource.getCurrentWeatherData(lat, long, "en")
             if (response.isSuccessful) {
                 emit(WeatherState.Success(response.body()!!))
             } else emit(WeatherState.Error("Error Found"))
@@ -49,16 +49,18 @@ class WeatherRepository private constructor(
         }
     }
 
-    fun getCurrentForecastWeather(): Flow<ForecastState> = flow {
-        try {
-            val response = weatherRemoteDataSource.getForecastWeatherData(12.0, 12.0, "en")
-            if (response.isSuccessful) {
-                emit(ForecastState.Success(response.body()!!))
-            } else emit(ForecastState.Error(response.message()))
-        } catch (e: Exception) {
-            emit(ForecastState.Error(e.message!!))
+    fun getCurrentForecastWeather(lat: Double = 10.0, long: Double = 10.0): Flow<ForecastState> =
+        flow {
+            try {
+                val response = weatherRemoteDataSource.getForecastWeatherData(lat, long, "en")
+                if (response.isSuccessful) {
+                    emit(ForecastState.Success(response.body()!!))
+                } else emit(ForecastState.Error(response.message()))
+            } catch (e: Exception) {
+                emit(ForecastState.Error(e.message!!))
+            }
         }
-    }
+
 
 
     fun setFirstTime() {
@@ -117,14 +119,14 @@ class WeatherRepository private constructor(
         return flow {
             weatherLocalDataSource.getAllFavorites().collect() { favList ->
                 emit(FavoritesState.Success(favList))
-                }
+            }
         }
 
     }
+
     suspend fun deleteProduct(product: FavData) {
         weatherLocalDataSource.deleteProduct(product)
     }
-
 
 
 }

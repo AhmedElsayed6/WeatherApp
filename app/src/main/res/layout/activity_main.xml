@@ -43,6 +43,10 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:menu="@menu/navigation_menu_layout"
+        app:itemRippleColor="#79B2EF"
+
+        app:itemTextAppearance="@style/CustomNavigationDrawerText"
+        app:itemBackground="@drawable/menu_item_selector"
         app:headerLayout="@layout/drawer_header_layout">
 
     </com.google.android.material.navigation.NavigationView>

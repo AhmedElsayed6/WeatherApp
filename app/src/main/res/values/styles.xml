@@ -6,4 +6,12 @@
     <item name="color">#064040</item>
 </style>
 
+
+    <style name="CustomNavigationDrawerText" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">@font/roboto_flex</item>
+        <item name="color">#077E7E</item>
+
+    </style>
+
 </resources>

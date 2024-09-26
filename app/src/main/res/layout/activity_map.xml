@@ -27,7 +27,7 @@
         android:layout_marginEnd="20dp"
         android:background="@drawable/background_searchview"
         android:backgroundTint="#ffffff"
-        android:drawableStart="@drawable/search"
+        android:drawableStart="@drawable/icon_search"
         android:drawablePadding="8dp"
         android:hint="@string/SearchForLocation"
         android:padding="12dp"

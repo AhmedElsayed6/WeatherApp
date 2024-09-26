@@ -98,8 +98,8 @@ class MapActivity : AppCompatActivity(), OnSearchItemClick, OnClickUpdateHomeLoc
         map.mapCenter
         map.getLocalVisibleRect(Rect())
         map.setMultiTouchControls(true)
-        map.controller.setZoom(5.0)
-        map.controller.setCenter(GeoPoint(0.0, 0.0))
+        map.controller.setZoom(10.0)
+        map.controller.setCenter(GeoPoint(31.0, 29.0))
         val mapEventsReceiver = object : MapEventsReceiver {
             override fun singleTapConfirmedHelper(point: GeoPoint?): Boolean {
                 point?.let {
@@ -140,6 +140,7 @@ class MapActivity : AppCompatActivity(), OnSearchItemClick, OnClickUpdateHomeLoc
         val marker = Marker(map)
         marker.position = GeoPoint(lat, lon)
         map.overlays.add(marker)
+        map.invalidate()
         map.controller.setCenter(GeoPoint(lat, lon))
     }
 
@@ -150,8 +151,8 @@ class MapActivity : AppCompatActivity(), OnSearchItemClick, OnClickUpdateHomeLoc
             if (!addresses.isNullOrEmpty()) {
                 lat = addresses[0].latitude
                 long = addresses[0].longitude
-                if (addresses[0].locality != null) city =
-                    (addresses[0].locality + " - " + addresses[0].countryCode)
+                if (addresses[0].adminArea != null) city =
+                    (addresses[0].adminArea + " - " + addresses[0].countryCode)
                 else city = cityName.replaceFirstChar { it.uppercaseChar() }
                 showOnMap(lat!!, long!!)
                 val dialog =
@@ -173,8 +174,8 @@ class MapActivity : AppCompatActivity(), OnSearchItemClick, OnClickUpdateHomeLoc
         val geocoder = Geocoder(this, Locale.getDefault())
         try {
             val addresses = geocoder.getFromLocation(lon, lat, 1)
-            if (!addresses.isNullOrEmpty()) {
-                city = addresses[0].locality + " " + addresses[0].countryCode
+            if (addresses!!.get(0).adminArea !=null) {
+                city = addresses[0].adminArea + " " + addresses[0].countryCode
             } else city = "Unknown City"
         } catch (e: Exception) {
         }

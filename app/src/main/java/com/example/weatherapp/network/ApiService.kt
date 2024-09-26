@@ -16,7 +16,8 @@ interface ApiService {
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
         @Query("appid") apiKey: String,
-        @Query("lang") lang: String
+        @Query("lang") lang: String,
+        @Query("units") units: String = ("metric")
     ): Response<WeatherData>
 
     @GET("forecast")
@@ -25,7 +26,9 @@ interface ApiService {
         @Query("lon") lon: Double,
         @Query("appid") apiKey: String,
         @Query("lang") lang: String,
+        @Query("units") units: String = ("metric")
     ): Response<ForecastData>
+
 
 }
 

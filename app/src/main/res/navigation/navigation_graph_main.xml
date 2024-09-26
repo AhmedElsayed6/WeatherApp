@@ -19,5 +19,18 @@
         android:id="@+id/favoritesFragment"
         android:name="com.example.weatherapp.favorites.FavoritesFragment"
         android:label="fragment_favorites"
-        tools:layout="@layout/fragment_favorites" />
+        tools:layout="@layout/fragment_favorites" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_favoritesDetailsFragment2"
+            app:destination="@id/favoritesDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoritesDetailsFragment"
+        android:name="com.example.weatherapp.favorites.FavoritesDetailsFragment"
+        android:label="FavoritesDetailsFragment" />
+    <fragment
+        android:id="@+id/alertsFragment"
+        android:name="com.example.weatherapp.AlertsFragment"
+        android:label="fragment_alerts"
+        tools:layout="@layout/fragment_alerts" />
 </navigation>

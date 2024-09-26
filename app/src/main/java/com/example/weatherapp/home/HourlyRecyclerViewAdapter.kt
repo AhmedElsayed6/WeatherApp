@@ -9,6 +9,8 @@ import com.example.weatherapp.databinding.RvItemHourlyBinding
 import com.example.weatherapp.util.toAMPM
 import com.example.weatherapp.util.toDrawable
 import com.example.weatherapp.util.toDaysTime
+import com.example.weatherapp.util.toFahrenheit
+import com.example.weatherapp.util.toKelvin
 
 
 class HourlyRecyclerViewAdapter(private var data: List<WeatherData> ,private var tempUnit: String) : RecyclerView.Adapter<HourlyRecyclerViewAdapter.ViewHolder>() {
@@ -27,7 +29,13 @@ class HourlyRecyclerViewAdapter(private var data: List<WeatherData> ,private var
         with(holder.binding) {
             ivHourlyImage.setImageResource(item.weather.get(0).icon.toDrawable())
             tvHourlyTime.text=item.dt.toAMPM()
-            tvHourlyTemp.text=item.main.temp_min.toString()+" $tempUnit / "+item.main.temp_max.toString()+"  $tempUnit"
+            when (tempUnit) {
+                "C" ->  tvHourlyTemp.text=item.main.temp_min.toString()+" $tempUnit°/ "+item.main.temp_max.toString()+"  $tempUnit°"
+
+                "K" ->  tvHourlyTemp.text=item.main.temp_min.toKelvin().toString()+" $tempUnit° / "+item.main.temp_max.toKelvin().toString()+"  $tempUnit°"
+
+                "F" ->  tvHourlyTemp.text=item.main.temp_min.toFahrenheit().toString()+" $tempUnit° / "+item.main.temp_max.toFahrenheit().toString()+"  $tempUnit°"
+            }
 
         }
     }

@@ -111,7 +111,7 @@ class FavoritesFragment : Fragment(), OnClickHandleButton , OnClickDeleteFavorit
         val bundle = Bundle().apply {
             putSerializable("data", favData)
         }
-        findNavController().navigate(R.id.homeFragment, bundle)
+        findNavController().navigate(R.id.favoritesDetailsFragment, bundle)
     }
 
 

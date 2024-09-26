@@ -8,6 +8,8 @@ import com.example.weatherapp.data.source.WeatherData
 import com.example.weatherapp.databinding.RvItemDailyBinding
 import com.example.weatherapp.util.toDaysTime
 import com.example.weatherapp.util.toDrawable
+import com.example.weatherapp.util.toFahrenheit
+import com.example.weatherapp.util.toKelvin
 
 
 class DailyRecyclerViewAdapter(private var data: List<WeatherData>, private var tempUnit: String) :
@@ -30,8 +32,16 @@ class DailyRecyclerViewAdapter(private var data: List<WeatherData>, private var 
                 tvDayName.text = "Tomorrow"
             else
                 tvDayName.text = item.dt.toDaysTime()
-            tvDayWeatherTemp.text =
-                item.main.temp_min.toString() + " $tempUnit/ " + item.main.temp_max.toString() + "   $tempUnit"
+            when (tempUnit) {
+                "C" ->   tvDayWeatherTemp.text =
+                    item.main.temp_min.toString() + " $tempUnit° / " + item.main.temp_max.toString() + "   $tempUnit°"
+                "K" ->   tvDayWeatherTemp.text =
+                    item.main.temp_min.toKelvin().toString() + " $tempUnit° / " + item.main.temp_max.toKelvin().toString() + "   $tempUnit°"
+
+                "F" ->   tvDayWeatherTemp.text =
+                    item.main.temp_min.toFahrenheit().toString() + " $tempUnit° / " + item.main.temp_max.toFahrenheit().toString() + "   $tempUnit°"
+            }
+
             ivDayWeatherIcon.setImageResource(item.weather[0].icon.toDrawable())
 
             tvDayWeatherDesc.text = item.weather[0].description.replaceFirstChar { it.uppercaseChar() }

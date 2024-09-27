@@ -2,6 +2,7 @@ package com.example.weatherapp.data.source.sharedPrefrence
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 
 class WeatherSharedPreferenceDataSource private constructor(private val context: Context) {
 
@@ -30,7 +31,7 @@ class WeatherSharedPreferenceDataSource private constructor(private val context:
     }
 
     fun getLanguage(): String {
-        return sp.getString("language", "en")!!
+        return sp.getString("language", "English")!!
     }
 
     fun getUnitTemp(): String {
@@ -42,7 +43,7 @@ class WeatherSharedPreferenceDataSource private constructor(private val context:
     }
 
     fun getNotificationSettings(): String {
-        return sp.getString("notification", "yes")!!
+        return sp.getString("notification", "Enable")!!
     }
 
     fun getLocationSettings(): String {

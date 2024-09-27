@@ -1,5 +1,6 @@
 package com.example.weatherapp.data.source
 
+import android.util.Log
 import com.example.weatherapp.data.source.local.FavoritesState
 import com.example.weatherapp.data.source.local.WeatherLocalDataSource
 import com.example.weatherapp.data.source.remote.WeatherRemoteDataSource
@@ -39,8 +40,13 @@ class WeatherRepository private constructor(
 
 
     fun getCurrentWeather(lat: Double = 10.0, long: Double = 10.0): Flow<WeatherState> = flow {
+
         try {
-            val response = weatherRemoteDataSource.getCurrentWeatherData(lat, long, "en")
+            val response = weatherRemoteDataSource.getCurrentWeatherData(
+                lat,
+                long,
+                if (getLanguageSettings() == "English") "en" else "ar"
+            )
             if (response.isSuccessful) {
                 emit(WeatherState.Success(response.body()!!))
             } else emit(WeatherState.Error("Error Found"))
@@ -50,9 +56,14 @@ class WeatherRepository private constructor(
     }
 
     fun getCurrentForecastWeather(lat: Double = 10.0, long: Double = 10.0): Flow<ForecastState> =
+
         flow {
             try {
-                val response = weatherRemoteDataSource.getForecastWeatherData(lat, long, "en")
+                val response = weatherRemoteDataSource.getForecastWeatherData(
+                    lat,
+                    long,
+                    if (getLanguageSettings() == "English") "en" else "ar"
+                )
                 if (response.isSuccessful) {
                     emit(ForecastState.Success(response.body()!!))
                 } else emit(ForecastState.Error(response.message()))
@@ -60,7 +71,6 @@ class WeatherRepository private constructor(
                 emit(ForecastState.Error(e.message!!))
             }
         }
-
 
 
     fun setFirstTime() {
@@ -76,6 +86,7 @@ class WeatherRepository private constructor(
     }
 
     fun setUnitTemp(unit: String) {
+        Log.i("here", "setUnitTemp: in sp $unit")
         weatherSharedPreferenceDataSource.setUnitTemp(unit)
     }
 
@@ -97,6 +108,13 @@ class WeatherRepository private constructor(
 
     fun setLongitude(long: Double) {
         weatherSharedPreferenceDataSource.setLongitude(long)
+    }
+
+    fun getNotificationSettings(): String {
+        return weatherSharedPreferenceDataSource.getNotificationSettings()
+    }
+    fun getLanguageSettings(): String {
+        return weatherSharedPreferenceDataSource.getLanguage()
     }
 
     fun getLocationSettings(): String {

@@ -174,7 +174,7 @@ class MapActivity : AppCompatActivity(), OnSearchItemClick, OnClickUpdateHomeLoc
         val geocoder = Geocoder(this, Locale.getDefault())
         try {
             val addresses = geocoder.getFromLocation(lon, lat, 1)
-            if (addresses!!.get(0).adminArea !=null) {
+            if (addresses!!.get(0).adminArea != null) {
                 city = addresses[0].adminArea + " " + addresses[0].countryCode
             } else city = "Unknown City"
         } catch (e: Exception) {
@@ -202,6 +202,7 @@ class MapActivity : AppCompatActivity(), OnSearchItemClick, OnClickUpdateHomeLoc
     }
 
     override fun updateHomeLocation() {
-        TODO("Not yet implemented")
+        viewModel.setLongLat(lat!!, long!!)
+        finish()
     }
 }

@@ -83,13 +83,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"
                     android:checked="true"
-                    android:text="GPS" />
+                    android:text="@string/GPS" />
 
                 <RadioButton
-                    android:id="@+id/rdMap"
+                    android:id="@+id/rbMap"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Map" />
+                    android:text="@string/Map" />
 
 
             </RadioGroup>
@@ -121,13 +121,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"
                     android:checked="true"
-                    android:text="English" />
+                    android:text="@string/English" />
 
                 <RadioButton
-                    android:id="@+id/rdArabic"
+                    android:id="@+id/rbArabic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Arabic" />
+                    android:text="@string/Arabic" />
 
 
             </RadioGroup>
@@ -160,13 +160,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"
                     android:checked="true"
-                    android:text="Enable" />
+                    android:text="@string/Enable" />
 
                 <RadioButton
-                    android:id="@+id/rdDisable"
+                    android:id="@+id/rbDisable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Disable" />
+                    android:text="@string/Disable" />
 
 
             </RadioGroup>
@@ -204,14 +204,14 @@
                     android:text="@string/Celsius" />
 
                 <RadioButton
-                    android:id="@+id/rdK"
+                    android:id="@+id/rbK"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"
                     android:text="@string/Kelvin" />
 
                 <RadioButton
-                    android:id="@+id/rdF"
+                    android:id="@+id/rbF"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/Fahrenheit" />
@@ -252,7 +252,7 @@
                     android:text="@string/MeterSec" />
 
                 <RadioButton
-                    android:id="@+id/rdMS"
+                    android:id="@+id/rbMH"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"

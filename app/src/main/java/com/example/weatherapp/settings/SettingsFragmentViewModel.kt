@@ -1,9 +1,10 @@
 package com.example.weatherapp.settings
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp.data.source.WeatherRepository
 
-class SettingsFragmentViewModel (private val weatherRepository: WeatherRepository) : ViewModel() {
+class SettingsFragmentViewModel(private val weatherRepository: WeatherRepository) : ViewModel() {
 
 
     fun setLanguage(language: String) {
@@ -11,6 +12,7 @@ class SettingsFragmentViewModel (private val weatherRepository: WeatherRepositor
     }
 
     fun setUnitTemp(unit: String) {
+        Log.i("here", "setUnitTemp: in sp VM $unit")
         weatherRepository.setUnitTemp(unit)
     }
 
@@ -46,6 +48,13 @@ class SettingsFragmentViewModel (private val weatherRepository: WeatherRepositor
         return weatherRepository.getUnitTemp()
     }
 
+    fun getNotificationSettings(): String {
+        return weatherRepository.getNotificationSettings()
+    }
+
+    fun getLanguageSettings(): String {
+        return weatherRepository.getLanguageSettings()
+    }
 
 
 }

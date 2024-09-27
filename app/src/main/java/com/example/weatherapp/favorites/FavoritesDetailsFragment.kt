@@ -32,6 +32,7 @@ import com.example.weatherapp.util.toDrawable
 import com.example.weatherapp.util.toFahrenheit
 import com.example.weatherapp.util.toKelvin
 import com.example.weatherapp.util.toMilesPerHour
+import com.example.weatherapp.util.toTwoDecimalPlaces
 import kotlinx.coroutines.launch
 
 class FavoritesDetailsFragment : Fragment() {
@@ -98,13 +99,13 @@ class FavoritesDetailsFragment : Fragment() {
                             binding.tvCityName.text = favData!!.city
                             when (tempUnit) {
                                 "C" -> binding.tvTemp.text =
-                                    it.weatherData.main.temp.toString() + " $tempUnit"+"°"
+                                    it.weatherData.main.temp.toTwoDecimalPlaces().toString() + " $tempUnit"+"°"
 
                                 "K" -> binding.tvTemp.text =
-                                    it.weatherData.main.temp.toKelvin().toString() + " $tempUnit"+"°"
+                                    it.weatherData.main.temp.toKelvin().toTwoDecimalPlaces().toString() + " $tempUnit"+"°"
 
                                 "F" -> binding.tvTemp.text =
-                                    it.weatherData.main.temp.toFahrenheit()
+                                    it.weatherData.main.temp.toFahrenheit().toTwoDecimalPlaces()
                                         .toString() + " $tempUnit"+"°"
                             }
                             binding.tvDescription.text =
@@ -113,8 +114,8 @@ class FavoritesDetailsFragment : Fragment() {
                             when (speedUnit) {
                                 "ms" -> binding.tvWindSpeed.text =
                                     it.weatherData.wind.speed.toString() + " Meter/Sec"
-                                "mh" -> binding.tvTemp.text =
-                                    it.weatherData.main.temp.toMilesPerHour().toString() + " Mile/Hour"
+                                "mh" -> binding.tvWindSpeed.text =
+                                    it.weatherData.wind.speed.toMilesPerHour().toTwoDecimalPlaces().toString() + " Mile/Hour"
 
                             }
                             binding.tvHumidity.text = it.weatherData.main.humidity.toString() + " %"

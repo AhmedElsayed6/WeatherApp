@@ -16,5 +16,10 @@ class MapActivityViewModel(private val weatherRepository: WeatherRepository) : V
 
     }
 
+    fun setLongLat(lat: Double, long: Double) {
+        weatherRepository.setLatitude(lat)
+        weatherRepository.setLongitude(long)
+    }
+
 
 }

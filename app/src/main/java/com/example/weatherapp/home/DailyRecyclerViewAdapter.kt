@@ -10,6 +10,7 @@ import com.example.weatherapp.util.toDaysTime
 import com.example.weatherapp.util.toDrawable
 import com.example.weatherapp.util.toFahrenheit
 import com.example.weatherapp.util.toKelvin
+import com.example.weatherapp.util.toTwoDecimalPlaces
 
 
 class DailyRecyclerViewAdapter(private var data: List<WeatherData>, private var tempUnit: String) :
@@ -34,12 +35,12 @@ class DailyRecyclerViewAdapter(private var data: List<WeatherData>, private var 
                 tvDayName.text = item.dt.toDaysTime()
             when (tempUnit) {
                 "C" ->   tvDayWeatherTemp.text =
-                    item.main.temp_min.toString() + " $tempUnit° / " + item.main.temp_max.toString() + "   $tempUnit°"
+                    item.main.temp_min.toTwoDecimalPlaces().toString() + " $tempUnit° / " + item.main.temp_max.toString() + "   $tempUnit°"
                 "K" ->   tvDayWeatherTemp.text =
-                    item.main.temp_min.toKelvin().toString() + " $tempUnit° / " + item.main.temp_max.toKelvin().toString() + "   $tempUnit°"
+                    item.main.temp_min.toKelvin().toTwoDecimalPlaces().toString() + " $tempUnit° / " + item.main.temp_max.toKelvin().toTwoDecimalPlaces().toString() + "   $tempUnit°"
 
                 "F" ->   tvDayWeatherTemp.text =
-                    item.main.temp_min.toFahrenheit().toString() + " $tempUnit° / " + item.main.temp_max.toFahrenheit().toString() + "   $tempUnit°"
+                    item.main.temp_min.toFahrenheit().toTwoDecimalPlaces().toString() + " $tempUnit° / " + item.main.temp_max.toFahrenheit().toTwoDecimalPlaces().toString() + "   $tempUnit°"
             }
 
             ivDayWeatherIcon.setImageResource(item.weather[0].icon.toDrawable())

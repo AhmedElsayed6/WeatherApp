@@ -54,3 +54,7 @@ fun Double.toKelvin(): Double {
 fun Double.toFahrenheit(): Double {
     return (this * 9 / 5) + 32
 }
+
+fun Double.toTwoDecimalPlaces(): Double {
+    return String.format("%.2f", this).toDouble()
+}

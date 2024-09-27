@@ -40,4 +40,9 @@
     <string name="MeterSec">Meter / Sec</string>
     <string name="MileHour">Mile / Hour</string>
     <string name="Save">Save</string>
+    <string name="GPS">GPS</string>
+    <string name="Map">Map</string>
+    <string name="English">English</string>
+    <string name="Arabic">Arabic</string>
+    <string name="Disable">Disable</string>
 </resources>

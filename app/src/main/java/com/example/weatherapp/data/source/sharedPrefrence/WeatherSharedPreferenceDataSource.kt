@@ -51,11 +51,11 @@ class WeatherSharedPreferenceDataSource private constructor(private val context:
     }
 
     fun getLatitude(): Double {
-        return sp.getLong("lat", 0L).toDouble()
+        return sp.getString("lat", "0.0")!!.toDouble()
     }
 
     fun getLongitude(): Double {
-        return sp.getLong("long", 0L).toDouble()
+        return sp.getString("long", "0.0")!!.toDouble()
     }
 
     fun getFirstTime():Boolean {
@@ -85,11 +85,11 @@ class WeatherSharedPreferenceDataSource private constructor(private val context:
     }
 
     fun setLatitude(lat: Double) {
-        editor.putLong("lat", lat.toLong())
+        editor.putString("lat", lat.toString())
     }
 
     fun setLongitude(long: Double) {
-        editor.putLong("long", long.toLong())
+        editor.putString("long", long.toString())
     }
 
 

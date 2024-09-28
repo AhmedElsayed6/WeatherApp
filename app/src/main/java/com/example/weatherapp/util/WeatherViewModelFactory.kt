@@ -2,6 +2,7 @@ package com.example.weatherapp.util
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.weatherapp.alerts.AlertsFragmentViewModel
 import com.example.weatherapp.data.source.WeatherRepository
 import com.example.weatherapp.favorites.FavoritesDetailsFragmentViewModel
 import com.example.weatherapp.favorites.FavoritesFragmentViewModel
@@ -35,6 +36,9 @@ class WeatherViewModelFactory(private val repository: WeatherRepository) :
                 repository
             ) as T
             modelClass.isAssignableFrom(SettingsFragmentViewModel::class.java) -> SettingsFragmentViewModel(
+                repository
+            ) as T
+         modelClass.isAssignableFrom(AlertsFragmentViewModel::class.java) -> AlertsFragmentViewModel(
                 repository
             ) as T
 

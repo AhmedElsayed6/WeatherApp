@@ -47,7 +47,8 @@ class HomeFragment : Fragment() {
         val factory = WeatherViewModelFactory(
             WeatherRepository.getInstance(
                 WeatherLocalDataSource.getInstance(
-                    AppDatabase.getInstance(requireContext()).weatherDao()
+                    AppDatabase.getInstance(requireContext()).weatherDao(),
+                    AppDatabase.getInstance(requireContext()).alarmDao()
                 ),
                 WeatherRemoteDataSource.getInstance(API.retrofitService),
                 WeatherSharedPreferenceDataSource.getInstance(this.requireContext())

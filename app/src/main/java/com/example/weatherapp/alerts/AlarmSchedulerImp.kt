@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.example.weatherapp.data.source.AlarmItem
+import java.time.LocalDateTime
 import java.time.ZoneId
 
 class AlarmSchedulerImp(private val context: Context) : AlarmScheduler {
@@ -19,7 +20,7 @@ class AlarmSchedulerImp(private val context: Context) : AlarmScheduler {
             item.time.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
             PendingIntent.getBroadcast(
                 context,
-                item.hashCode(),
+                item.id,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )

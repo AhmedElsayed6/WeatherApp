@@ -9,15 +9,35 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.R
 
 import com.example.weatherapp.data.source.AlarmItem
+import com.example.weatherapp.data.source.WeatherRepository
+import com.example.weatherapp.data.source.local.AppDatabase
+import com.example.weatherapp.data.source.local.WeatherLocalDataSource
+import com.example.weatherapp.data.source.remote.WeatherRemoteDataSource
+import com.example.weatherapp.data.source.sharedPrefrence.WeatherSharedPreferenceDataSource
 import com.example.weatherapp.initial.InitialSetupActivity
+import com.example.weatherapp.network.API
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class AlarmReceiver : BroadcastReceiver() {
     private lateinit var context: Context
     private lateinit var notificationManager: NotificationManager
     private lateinit var item: AlarmItem
+    private val repository by lazy {
+        WeatherRepository.getInstance(
+            WeatherLocalDataSource.getInstance(
+                AppDatabase.getInstance(context).weatherDao(),
+                AppDatabase.getInstance(context).alarmDao()
+            ),
+            WeatherRemoteDataSource.getInstance(API.retrofitService),
+            WeatherSharedPreferenceDataSource.getInstance(context)
+        )
+    }
     override fun onReceive(context: Context?, intent: Intent?) {
         this.context = context!!
         item = intent?.getSerializableExtra("alarmItem") as AlarmItem? ?: return
@@ -44,6 +64,9 @@ class AlarmReceiver : BroadcastReceiver() {
                 .setAutoCancel(true)
                 .build()
         notificationManager.notify(item.hashCode(), notification)
+        GlobalScope.launch(Dispatchers.IO) {
+            repository.deleteAlarm(item)
+        }
     }
 
 

@@ -1,7 +1,10 @@
 package com.example.weatherapp.util
 
+import androidx.room.TypeConverter
 import com.example.weatherapp.R
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -57,4 +60,21 @@ fun Double.toFahrenheit(): Double {
 
 fun Double.toTwoDecimalPlaces(): Double {
     return String.format("%.2f", this).toDouble()
+}
+
+
+object Converters {
+    private val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+
+    @TypeConverter
+    fun fromLocalDateTime(localDateTime: LocalDateTime?): String? {
+        return localDateTime?.format(formatter)
+    }
+
+    @TypeConverter
+    fun toLocalDateTime(dateString: String?): LocalDateTime? {
+        return dateString?.let {
+            return LocalDateTime.parse(it, formatter)
+        }
+    }
 }

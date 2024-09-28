@@ -8,7 +8,6 @@ import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.widget.RadioButton
-import android.widget.Toast
 import androidx.core.content.ContextCompat.getString
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.DialogAlertLayoutBinding
@@ -21,7 +20,7 @@ class AlertDialog(
 ) : Dialog(context) {
     private val binding = DialogAlertLayoutBinding.inflate(LayoutInflater.from(context))
 
-    private var selectedDateTimeForData: LocalDateTime = LocalDateTime.now().plusSeconds(5L)
+    private var selectedDateTimeForData: LocalDateTime = LocalDateTime.now().plusSeconds(10)
 
     init {
         val calendar = Calendar.getInstance()
@@ -39,7 +38,7 @@ class AlertDialog(
                     TimePickerDialog(context, { _, selectedHour, selectedMinute ->
                         selectedDateTimeForData = LocalDateTime.of(
                             selectedYear,
-                            selectedMonth,
+                            selectedMonth + 1,
                             selectedDay,
                             selectedHour,
                             selectedMinute
@@ -53,11 +52,14 @@ class AlertDialog(
         }
 
         binding.btnSetAlert.setOnClickListener {
-        val alarmType =findViewById<RadioButton>(binding.radioGroupAlarm.checkedRadioButtonId).text.toString()
-            if(alarmType==getString(context, R.string.Alarm))
-            setAlarm.setAlarm(selectedDateTimeForData,true )
+            val alarmType =
+                findViewById<RadioButton>(binding.radioGroupAlarm.checkedRadioButtonId).text.toString()
+            if (alarmType == getString(context, R.string.Alarm))
+                setAlarm.setAlarm(selectedDateTimeForData!!, true)
             else
-                setAlarm.setAlarm(selectedDateTimeForData,false )
+                setAlarm.setAlarm(selectedDateTimeForData!!, false)
+
+            dismiss()
         }
 
 
@@ -67,8 +69,4 @@ class AlertDialog(
 
     }
 
-    fun showInfoForMap(lat: Double, long: Double, city: String) {
-
-
-    }
 }

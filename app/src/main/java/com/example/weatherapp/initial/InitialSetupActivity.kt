@@ -24,7 +24,8 @@ class InitialSetupActivity : AppCompatActivity() {
     private val viewModel: InitialSetupViewModel by lazy {
         val factory = WeatherViewModelFactory(
             WeatherRepository.getInstance(
-                WeatherLocalDataSource.getInstance(AppDatabase.getInstance(this).weatherDao()),
+                WeatherLocalDataSource.getInstance(AppDatabase.getInstance(this).weatherDao(),
+                    AppDatabase.getInstance(this).alarmDao()),
                 WeatherRemoteDataSource.getInstance(API.retrofitService),
                 WeatherSharedPreferenceDataSource.getInstance(this)
             )

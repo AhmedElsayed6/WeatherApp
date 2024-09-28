@@ -1,6 +1,7 @@
 package com.example.weatherapp.data.source
 
 import android.util.Log
+import com.example.weatherapp.alerts.AlarmState
 import com.example.weatherapp.data.source.local.FavoritesState
 import com.example.weatherapp.data.source.local.WeatherLocalDataSource
 import com.example.weatherapp.data.source.remote.WeatherRemoteDataSource
@@ -113,6 +114,7 @@ class WeatherRepository private constructor(
     fun getNotificationSettings(): String {
         return weatherSharedPreferenceDataSource.getNotificationSettings()
     }
+
     fun getLanguageSettings(): String {
         return weatherSharedPreferenceDataSource.getLanguage()
     }
@@ -144,6 +146,23 @@ class WeatherRepository private constructor(
 
     suspend fun deleteProduct(product: FavData) {
         weatherLocalDataSource.deleteProduct(product)
+    }
+
+
+    suspend fun addAlarm(alarmItem: AlarmItem) {
+        weatherLocalDataSource.addAlarm(alarmItem)
+    }
+
+    fun getAllAlarms(): Flow<AlarmState> {
+        return flow {
+            weatherLocalDataSource.getAllAlarms().collect() { alarmData ->
+                emit(AlarmState.Success(alarmData))
+            }
+        }
+    }
+
+    suspend fun deleteAlarm(alarmItem: AlarmItem) {
+        weatherLocalDataSource.deleteAlarm(alarmItem)
     }
 
 

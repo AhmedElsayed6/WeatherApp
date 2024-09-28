@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.weatherapp.MainActivity
 import com.example.weatherapp.R
 import com.example.weatherapp.data.source.WeatherRepository
 import com.example.weatherapp.data.source.local.AppDatabase
@@ -32,7 +33,8 @@ class SettingsFragment : Fragment() {
         val factory = WeatherViewModelFactory(
             WeatherRepository.getInstance(
                 WeatherLocalDataSource.getInstance(
-                    AppDatabase.getInstance(requireContext()).weatherDao()
+                    AppDatabase.getInstance(requireContext()).weatherDao(),
+                    AppDatabase.getInstance(requireContext()).alarmDao()
                 ),
                 WeatherRemoteDataSource.getInstance(API.retrofitService),
                 WeatherSharedPreferenceDataSource.getInstance(requireContext())
@@ -108,5 +110,11 @@ class SettingsFragment : Fragment() {
         binding.radioGroupSpeedUnits.check(if (windSpeedUnit == "ms") R.id.rbMS else R.id.rbMH)
     }
 
+
+
+    override fun onStart() {
+        super.onStart()
+        (activity as MainActivity).supportActionBar?.title = "Settings"
+    }
 
 }

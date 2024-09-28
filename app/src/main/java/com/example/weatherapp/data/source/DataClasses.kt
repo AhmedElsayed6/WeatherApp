@@ -3,6 +3,7 @@ package com.example.weatherapp.data.source
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
+import java.time.LocalDateTime
 
 data class WeatherData(
     val coord: Coord,
@@ -70,3 +71,6 @@ data class FavData(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 }
+
+
+data class AlarmItem(val time: LocalDateTime, val message: String) : Serializable {}

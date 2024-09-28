@@ -16,19 +16,38 @@ class HomeFragmentViewModel(private val weatherRepository: WeatherRepository) : 
     private val _currentWeatherState = MutableStateFlow<WeatherState>(WeatherState.Loading)
     val currentWeather: StateFlow<WeatherState> = _currentWeatherState.asStateFlow()
 
-    private val _currentForecastWeatherState = MutableStateFlow<ForecastState>(ForecastState.Loading)
-    val currentForecastWeather: StateFlow<ForecastState> = _currentForecastWeatherState.asStateFlow()
+    private val _currentForecastWeatherState =
+        MutableStateFlow<ForecastState>(ForecastState.Loading)
+    val currentForecastWeather: StateFlow<ForecastState> =
+        _currentForecastWeatherState.asStateFlow()
 
-    fun getWeatherData() {
+    fun getWeatherData(latitude: Double, longitude: Double) {
         viewModelScope.launch(Dispatchers.IO) {
-            weatherRepository.getCurrentWeather().collect {
+            weatherRepository.getCurrentWeather(latitude, longitude).collect {
                 _currentWeatherState.value = it
             }
         }
     }
-    fun getForecastWeatherData() {
+
+    fun getWeatherDataLocal() {
         viewModelScope.launch(Dispatchers.IO) {
-            weatherRepository.getCurrentForecastWeather().collect {
+            weatherRepository.getCurrentWeatherLocal().collect {
+                _currentWeatherState.value = it
+            }
+        }
+    }
+
+    fun getForecastDataLocal() {
+        viewModelScope.launch(Dispatchers.IO) {
+            weatherRepository.getForecastLocal().collect {
+                _currentForecastWeatherState.value = it
+            }
+        }
+    }
+
+    fun getForecastWeatherData(latitude: Double, longitude: Double) {
+        viewModelScope.launch(Dispatchers.IO) {
+            weatherRepository.getCurrentForecastWeather(latitude, longitude).collect {
                 _currentForecastWeatherState.value = it
             }
         }
@@ -38,13 +57,36 @@ class HomeFragmentViewModel(private val weatherRepository: WeatherRepository) : 
         return weatherRepository.getLocationSettings()
     }
 
-    fun getWindSpeedUnit() : String{
+    fun getWindSpeedUnit(): String {
         return weatherRepository.getUnitWind()
     }
 
-    fun getUnitTemp() : String{
+    fun getUnitTemp(): String {
         return weatherRepository.getUnitTemp()
     }
 
+    fun setFirstTimeData() {
+        weatherRepository.setFirstTimeData()
+    }
+
+    fun getFirstTimeData(): Boolean {
+        return weatherRepository.getFirstTimeData()
+    }
+
+    fun setLatitude(lat: Double) {
+        weatherRepository.setLatitude(lat)
+    }
+
+    fun setLongitude(long: Double) {
+        weatherRepository.setLongitude(long)
+    }
+
+    fun getLatitude(): Double {
+        return weatherRepository.getLatitude()
+    }
+
+    fun getLongitude(): Double {
+        return weatherRepository.getLongitude()
+    }
 
 }

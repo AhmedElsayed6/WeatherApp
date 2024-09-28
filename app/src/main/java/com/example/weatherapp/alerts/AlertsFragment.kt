@@ -1,10 +1,17 @@
 package com.example.weatherapp.alerts
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +32,7 @@ import com.example.weatherapp.util.WeatherViewModelFactory
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
+const val REQUEST_POST_NOTIFICATION = 1001
 
 class AlertsFragment : Fragment(), OnClickSetAlarm, OnClickDeleteAlarm {
 
@@ -58,10 +66,37 @@ class AlertsFragment : Fragment(), OnClickSetAlarm, OnClickDeleteAlarm {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnAddAlert.setOnClickListener {
-            
-            val alertDialog = AlertDialog(this.requireContext(), this)
-            alertDialog.show()
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ContextCompat.checkSelfPermission(
+                        this.requireContext(),
+                        android.Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    Toast.makeText(
+                        context,
+                        "Please allow notifications to use this feature",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    requestPermissions(
+                        arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                        REQUEST_POST_NOTIFICATION // Custom request code
+                    )
+                } else {
+                    if (!Settings.canDrawOverlays(context)) {
+                        val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:${context?.packageName}")
+                        )
+                        context?.startActivity(intent)
+                    } else {
+                        val alertDialog = AlertDialog(this.requireContext(), this)
+                        alertDialog.show()
+                    }
+                }
+            } else {
+                val alertDialog = AlertDialog(this.requireContext(), this)
+                alertDialog.show()
+            }
         }
 
         lifecycleScope.launch {
@@ -89,11 +124,10 @@ class AlertsFragment : Fragment(), OnClickSetAlarm, OnClickDeleteAlarm {
             }
         }
 
-
     }
 
+
     override fun setAlarm(time: LocalDateTime, isAlarm: Boolean) {
-        Log.i("here", "onViewCreated: clicked on setAlarm" + time.toString())
         val alarmItem = AlarmItem(time = time, isAlarm, message = "test")
         scheduler.scheduleAlarm(alarmItem)
         viewModel.addAlarm(alarmItem)
@@ -105,11 +139,10 @@ class AlertsFragment : Fragment(), OnClickSetAlarm, OnClickDeleteAlarm {
     }
 
 
-
-
     override fun onStart() {
         super.onStart()
         (activity as MainActivity).supportActionBar?.title = "Alerts"
     }
+
 
 }

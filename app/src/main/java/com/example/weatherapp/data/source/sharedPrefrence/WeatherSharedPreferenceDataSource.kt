@@ -2,7 +2,6 @@ package com.example.weatherapp.data.source.sharedPrefrence
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 
 class WeatherSharedPreferenceDataSource private constructor(private val context: Context) {
 
@@ -58,12 +57,7 @@ class WeatherSharedPreferenceDataSource private constructor(private val context:
         return sp.getString("long", "0.0")!!.toDouble()
     }
 
-    fun getFirstTime():Boolean {
-       return sp.getBoolean("firstTime",true)
-    }
-    fun setFirstTime(){
-        editor.putBoolean("firstTime",false).apply()
-    }
+
     fun setLanguage(language: String) {
         editor.putString("language", language).apply()
     }
@@ -92,6 +86,21 @@ class WeatherSharedPreferenceDataSource private constructor(private val context:
         editor.putString("long", long.toString())
     }
 
+    fun getFirstTime(): Boolean {
+        return sp.getBoolean("firstTime", true)
+    }
+    fun getFirstTimeData(): Boolean {
+        return sp.getBoolean("firstTimeData", true)
+    }
+
+
+    fun setFirstTime() {
+        editor.putBoolean("firstTime", false).apply()
+    }
+
+    fun setFirstTimeData() {
+        editor.putBoolean("firstTimeData", false).apply()
+    }
 
 
 }

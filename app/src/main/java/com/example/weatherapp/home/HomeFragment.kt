@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,17 +33,27 @@ import com.example.weatherapp.network.API
 import com.example.weatherapp.network.ForecastState
 import com.example.weatherapp.network.WeatherState
 import com.example.weatherapp.util.WeatherViewModelFactory
+import com.example.weatherapp.util.isNetworkAvailable
 import com.example.weatherapp.util.toAMPM
 import com.example.weatherapp.util.toDaysTime
 import com.example.weatherapp.util.toDrawable
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import kotlinx.coroutines.launch
 
 const val REQUEST_LOCATION_CODE = 2005
 
+
 class HomeFragment : Fragment() {
 
-
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var binding: FragmentHomeBinding
+    private var longitude: Double = 0.0
+    private var latitude: Double = 0.0
     private val viewModel: HomeFragmentViewModel by lazy {
         val factory = WeatherViewModelFactory(
             WeatherRepository.getInstance(
@@ -56,7 +67,6 @@ class HomeFragment : Fragment() {
         )
         ViewModelProvider(this, factory)[HomeFragmentViewModel::class.java]
     }
-    private lateinit var binding: FragmentHomeBinding
 
 
     override fun onCreateView(
@@ -78,17 +88,47 @@ class HomeFragment : Fragment() {
         binding.btnEnableLocation.setOnClickListener {
             enableLocationServices()
         }
+        binding.btnAllowNetwork.setOnClickListener {
+            enableInternet()
+        }
+
+        binding.swipeRefresh.setOnRefreshListener {
+            refreshData()
+        }
 
     }
 
     override fun onStart() {
         super.onStart()
         (activity as MainActivity).supportActionBar?.title = "Home"
-        if (viewModel.getLocationSettings() == "GPS") {
-            initPermissions()
-        } else {
-
+        if (viewModel.getFirstTimeData()) {
+            // handle network
+            if (isNetworkAvailable(this.requireContext())) {
+                binding.cvNetwork.visibility = View.GONE
+                // is it gps
+                if (viewModel.getLocationSettings() == "GPS") {
+                    initPermissions()
+                    launchStateFlows()
+                }
+                // map
+                else {
+                    latitude = viewModel.getLatitude()
+                    longitude = viewModel.getLongitude()
+                    viewModel.getWeatherData(latitude, longitude)
+                    viewModel.getForecastWeatherData(latitude, longitude)
+                    launchStateFlows()
+                }
+            }
         }
+        // not first time
+        else {
+            binding.cvNetwork.visibility = View.GONE
+            viewModel.getWeatherDataLocal()
+            viewModel.getForecastDataLocal()
+            launchStateFlows()
+        }
+
+
     }
 
     @SuppressLint("RepeatOnLifecycleWrongUsage")
@@ -157,7 +197,6 @@ class HomeFragment : Fragment() {
                                 it.forecastData.list.filterIndexed { index, _ -> index == 0 || (index + 1) % 8 == 0 },
                                 tempUnit
                             )
-                            // initDailyItemsUi(it.forecastData.list, tempUnit)
                         }
                     }
                 }
@@ -192,12 +231,15 @@ class HomeFragment : Fragment() {
             binding.cvLocation.visibility = View.VISIBLE
             if (isLocationEnabled()) {
                 binding.cvLocation.visibility = View.GONE
+                getFreshLocation()
+                viewModel.setLongitude(longitude)
+                viewModel.setLatitude(latitude)
+                viewModel.getWeatherData(latitude, longitude)
+                viewModel.getForecastWeatherData(latitude, longitude)
 
-                viewModel.getWeatherData()
-                viewModel.getForecastWeatherData()
-                launchStateFlows()
             }
         } else {
+            binding.cvPermissions.visibility = View.VISIBLE
             requestPermissions(
                 arrayOf(
                     android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -229,6 +271,11 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
+    private fun enableInternet() {
+        val intent = Intent(Settings.ACTION_DATA_ROAMING_SETTINGS);
+        startActivity(intent)
+    }
+
 
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
@@ -238,15 +285,13 @@ class HomeFragment : Fragment() {
     ) {
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Log.i("HEREEE", "onRequestPermResult: " + "Granted?")
         if (requestCode == REQUEST_LOCATION_CODE) {
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 binding.cvPermissions.visibility = View.GONE
                 binding.cvLocation.visibility = View.VISIBLE
                 if (isLocationEnabled()) {
                     binding.cvLocation.visibility = View.GONE
-                    viewModel.getWeatherData()
-                    viewModel.getForecastWeatherData()
+
                     launchStateFlows()
                 }
             }
@@ -255,4 +300,43 @@ class HomeFragment : Fragment() {
     }
 
 
+    @SuppressLint("MissingPermission")
+    fun getFreshLocation() {
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(this.requireActivity())
+        fusedLocationProviderClient.requestLocationUpdates(
+            LocationRequest.Builder(0).apply { setPriority(Priority.PRIORITY_HIGH_ACCURACY) }
+                .build(),
+            object : LocationCallback() {
+                override fun onLocationResult(p0: LocationResult) {
+                    super.onLocationResult(p0)
+                    fusedLocationProviderClient.removeLocationUpdates(this)
+                    longitude = p0.locations[0].longitude
+                    latitude = p0.locations[0].latitude
+                    viewModel.setLatitude(latitude)
+                    viewModel.setLongitude(longitude)
+                }
+            }, Looper.myLooper()
+        )
+    }
+
+    private fun refreshData() {
+        binding.clHomeFragment.visibility=View.GONE
+
+        if (isNetworkAvailable(this.requireContext())) {
+            binding.cvNetwork.visibility = View.GONE
+            // is it gps
+            if (viewModel.getLocationSettings() == "GPS") {
+                initPermissions()
+            }
+            // map
+            else {
+                latitude = viewModel.getLatitude()
+                longitude = viewModel.getLongitude()
+                viewModel.getWeatherData(latitude, longitude)
+                viewModel.getForecastWeatherData(latitude, longitude)
+            }
+        }
+        binding.swipeRefresh.isRefreshing = false
+    }
 }

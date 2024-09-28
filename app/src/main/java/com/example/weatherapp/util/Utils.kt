@@ -1,7 +1,13 @@
 package com.example.weatherapp.util
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.room.TypeConverter
 import com.example.weatherapp.R
+import com.example.weatherapp.data.source.Weather
+import com.example.weatherapp.data.source.WeatherData
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -62,6 +68,14 @@ fun Double.toTwoDecimalPlaces(): Double {
     return String.format("%.2f", this).toDouble()
 }
 
+fun isNetworkAvailable(context: Context): Boolean {
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val capabilities =
+        connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+    return capabilities != null
+}
+
 
 object Converters {
     private val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
@@ -76,5 +90,50 @@ object Converters {
         return dateString?.let {
             return LocalDateTime.parse(it, formatter)
         }
+
+    }
+
+    @TypeConverter
+    fun fromWeatherList(value: List<Weather>): String {
+        return Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun toWeatherList(value: String): List<Weather> {
+        val listType = object : TypeToken<List<Weather>>() {}.type
+        return Gson().fromJson(value, listType)
+    }
+
+    @TypeConverter
+    fun fromWeatherDataList(value: List<WeatherData>): String {
+        return Gson().toJson(value)
+    }
+
+    @TypeConverter
+    fun toWeatherDataList(value: String): List<WeatherData> {
+        val listType = object : TypeToken<List<WeatherData>>() {}.type
+        return Gson().fromJson(value, listType)
+    }
+
+    fun checkAndChangLocality() {
+//        val languageCode = if(sharedViewModel.settingsLanguage.value == Constants.ENGLISH_SELECTION_VALUE) "en" else "ar"
+//        val locale = resources.configuration.locales[0]
+//
+//        if(locale.language != languageCode)
+//        {
+//
+//            val newLocale = Locale(languageCode)
+//            Locale.setDefault(newLocale)
+//
+//            val config = resources.configuration
+//
+//            config.setLocale(newLocale)
+//            config.setLayoutDirection(newLocale)
+//
+//            resources.updateConfiguration(config,resources.displayMetrics)
+//
+//            recreate()
+//
+//        }
     }
 }

@@ -9,6 +9,7 @@ import com.example.weatherapp.data.source.sharedPrefrence.WeatherSharedPreferenc
 import com.example.weatherapp.network.ForecastState
 import com.example.weatherapp.network.WeatherState
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class WeatherRepository private constructor(
@@ -40,8 +41,7 @@ class WeatherRepository private constructor(
     }
 
 
-    fun getCurrentWeather(lat: Double = 10.0, long: Double = 10.0): Flow<WeatherState> = flow {
-
+    fun getCurrentWeather(lat: Double, long: Double): Flow<WeatherState> = flow {
         try {
             val response = weatherRemoteDataSource.getCurrentWeatherData(
                 lat,
@@ -49,15 +49,33 @@ class WeatherRepository private constructor(
                 if (getLanguageSettings() == "English") "en" else "ar"
             )
             if (response.isSuccessful) {
-                emit(WeatherState.Success(response.body()!!))
+                weatherLocalDataSource.addWeatherData(response.body()!!)
+                weatherLocalDataSource.getWeatherData()
+                    .catch { emit(WeatherState.Error("Error Found")) }.collect {
+                        weatherSharedPreferenceDataSource.setFirstTimeData()
+                        emit(WeatherState.Success(it))
+                    }
             } else emit(WeatherState.Error("Error Found"))
         } catch (e: Exception) {
             emit(WeatherState.Error("Error Found"))
         }
     }
 
-    fun getCurrentForecastWeather(lat: Double = 10.0, long: Double = 10.0): Flow<ForecastState> =
+    fun getCurrentWeatherLocal(): Flow<WeatherState> = flow {
+        weatherLocalDataSource.getWeatherData()
+            .catch { emit(WeatherState.Error("Error Found")) }.collect {
+                emit(WeatherState.Success(it))
+            }
+    }
 
+    fun getForecastLocal(): Flow<ForecastState> = flow {
+        weatherLocalDataSource.getForecastData()
+            .catch { emit(ForecastState.Error("Error Found")) }.collect {
+                emit(ForecastState.Success(it))
+            }
+    }
+
+    fun getCurrentForecastWeather(lat: Double = 10.0, long: Double = 10.0): Flow<ForecastState> =
         flow {
             try {
                 val response = weatherRemoteDataSource.getForecastWeatherData(
@@ -66,7 +84,12 @@ class WeatherRepository private constructor(
                     if (getLanguageSettings() == "English") "en" else "ar"
                 )
                 if (response.isSuccessful) {
-                    emit(ForecastState.Success(response.body()!!))
+                    weatherLocalDataSource.addForecastData(response.body()!!)
+                    weatherLocalDataSource.getForecastData()
+                        .catch { emit(ForecastState.Error("Error Found")) }.collect {
+                            weatherSharedPreferenceDataSource.setFirstTimeData()
+                            emit(ForecastState.Success(it))
+                        }
                 } else emit(ForecastState.Error(response.message()))
             } catch (e: Exception) {
                 emit(ForecastState.Error(e.message!!))
@@ -80,6 +103,14 @@ class WeatherRepository private constructor(
 
     fun getFirstTime(): Boolean {
         return weatherSharedPreferenceDataSource.getFirstTime()
+    }
+
+    fun setFirstTimeData() {
+        weatherSharedPreferenceDataSource.setFirstTimeData()
+    }
+
+    fun getFirstTimeData(): Boolean {
+        return weatherSharedPreferenceDataSource.getFirstTimeData()
     }
 
     fun setLanguage(language: String) {
@@ -109,6 +140,14 @@ class WeatherRepository private constructor(
 
     fun setLongitude(long: Double) {
         weatherSharedPreferenceDataSource.setLongitude(long)
+    }
+
+    fun getLatitude(): Double {
+        return weatherSharedPreferenceDataSource.getLatitude()
+    }
+
+    fun getLongitude(): Double {
+        return weatherSharedPreferenceDataSource.getLongitude()
     }
 
     fun getNotificationSettings(): String {

@@ -13,6 +13,7 @@ import com.example.weatherapp.data.source.local.WeatherLocalDataSource
 import com.example.weatherapp.data.source.remote.WeatherRemoteDataSource
 import com.example.weatherapp.data.source.sharedPrefrence.WeatherSharedPreferenceDataSource
 import com.example.weatherapp.databinding.ActivityInitialSetupBinding
+import com.example.weatherapp.map.MapActivity
 import com.example.weatherapp.network.API
 import com.example.weatherapp.settings.SettingsFragmentViewModel
 import com.example.weatherapp.util.WeatherViewModelFactory
@@ -43,6 +44,11 @@ class InitialSetupActivity : AppCompatActivity() {
         var notification: String = ""
         var language: String = ""
 
+        binding.rdMap.setOnClickListener {
+            val intent = Intent(this, MapActivity::class.java)
+            intent.putExtra("fav", false)
+            startActivity(intent)
+        }
         binding.btnOkay.setOnClickListener {
             if (binding.radioGroupLocation.checkedRadioButtonId != -1) {
                 location =

@@ -12,9 +12,9 @@ class InitialSetupViewModel(private val weatherRepository: WeatherRepository) : 
 
     fun setUpData(location: String, language: String, notification: String) {
         if (language == "English")
-            weatherRepository.setLanguage("en")
+            weatherRepository.setLanguage("English")
         else
-            weatherRepository.setLanguage("ar")
+            weatherRepository.setLanguage("Arabic")
 
         if (location == "GPS")
             weatherRepository.setLocationSettings("GPS")
@@ -22,9 +22,9 @@ class InitialSetupViewModel(private val weatherRepository: WeatherRepository) : 
             weatherRepository.setLocationSettings("Map")
 
         if (notification == "Enable")
-            weatherRepository.setNotificationSettings("yes")
+            weatherRepository.setNotificationSettings("Enable")
         else
-            weatherRepository.setNotificationSettings("no")
+            weatherRepository.setNotificationSettings("Disable")
 
         weatherRepository.setFirstTime()
 

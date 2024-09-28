@@ -19,6 +19,7 @@ import com.example.weatherapp.databinding.FragmentSettingsBinding
 import com.example.weatherapp.map.MapActivity
 import com.example.weatherapp.network.API
 import com.example.weatherapp.util.WeatherViewModelFactory
+import com.example.weatherapp.util.isNetworkAvailable
 
 
 class SettingsFragment : Fragment() {
@@ -56,6 +57,9 @@ class SettingsFragment : Fragment() {
         this.view = view
         initUnits()
         binding.rbMap.setOnClickListener {
+            if (isNetworkAvailable(this.requireContext())) {
+
+            }
             val intent = Intent(requireActivity(), MapActivity::class.java)
             intent.putExtra("fav", false)
             startActivity(intent)

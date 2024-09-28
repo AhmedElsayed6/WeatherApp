@@ -1,36 +1,43 @@
 package com.example.weatherapp.data.source
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import java.io.Serializable
 import java.time.LocalDateTime
 
+@Entity(tableName = "WeatherDataTable")
 data class WeatherData(
-    val coord: Coord,
+    @Embedded(prefix = "coord_") val coord: Coord,
     val weather: List<Weather>,
-    val main: Main,
-    val wind: Wind,
-    val clouds: Clouds,
+    @Embedded(prefix = "main_")  val main: Main,
+    @Embedded(prefix = "wind_")  val wind: Wind,
+    @Embedded(prefix = "clouds_") val clouds: Clouds,
+    @PrimaryKey
     val dt: Long,
-    //city name
     val name: String,
+    var isGPS: Boolean = true,
 )
 
+@Entity(tableName = "ForecastDataTable")
 data class ForecastData(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val list: List<WeatherData>,
-    val city: City
+    @Embedded(prefix = "city_") val city: City
 )
 
 data class City(
-    val id: Int,
     val name: String,
-    val coord: Coord,
+    @Embedded(prefix = "coord_") val coord: Coord,
     val country: String,
     val population: Int,
     val timezone: Int,
     val sunrise: Long,
     val sunset: Long
 )
+
 
 // done
 data class Coord(

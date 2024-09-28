@@ -6,8 +6,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.weatherapp.data.source.FavData
+import com.example.weatherapp.data.source.ForecastData
+import com.example.weatherapp.data.source.WeatherData
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface WeatherDao {
@@ -20,4 +21,25 @@ interface WeatherDao {
 
     @Delete
     suspend fun deleteProduct(favData: FavData)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addWeatherData(weatherData: WeatherData): Long
+
+    @Query("Select * from WeatherDataTable")
+    fun getWeatherData(): Flow<WeatherData>
+
+    @Delete
+    suspend fun deleteWeatherData(weatherData: WeatherData)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addForecastData(forecastData: ForecastData): Long
+
+    @Query("Select * from ForecastDataTable")
+    fun getForecastData(): Flow<ForecastData>
+
+    @Delete
+    suspend fun deleteForecastData(forecastData: ForecastData)
+
+
+
 }

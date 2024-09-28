@@ -7,11 +7,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
+import android.provider.Settings
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.R
-
 import com.example.weatherapp.data.source.AlarmItem
 import com.example.weatherapp.data.source.WeatherRepository
 import com.example.weatherapp.data.source.local.AppDatabase
@@ -38,11 +36,24 @@ class AlarmReceiver : BroadcastReceiver() {
             WeatherSharedPreferenceDataSource.getInstance(context)
         )
     }
+
     override fun onReceive(context: Context?, intent: Intent?) {
         this.context = context!!
         item = intent?.getSerializableExtra("alarmItem") as AlarmItem? ?: return
-        Log.i("here", "onReceive: BCR" + item.message)
-        showNotification()
+        if (repository.getNotificationSettings() == "Enable") {
+            if (Settings.canDrawOverlays(context)) {
+                if (item.isAlarm) {
+                    showNotification()
+                    val intent = Intent(context, AlarmService::class.java)
+                    intent.putExtra("alarmItem", item)
+                    context.startService(intent)
+                } else {
+                    showNotification()
+                }
+            }
+        }
+
+
     }
 
 
@@ -85,5 +96,29 @@ class AlarmReceiver : BroadcastReceiver() {
         }
     }
 
+
+//    fun startTheAlertService(context: Context, title: String, description: String) {
+//        val intent = Intent(context, MyDialogService::class.java).apply {
+//            putExtra("title", title)
+//            putExtra("description", description)
+//        }
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            val notificationManager = context.getSystemService(NotificationManager::class.java) as NotificationManager
+//            if (notificationManager.areNotificationsEnabled()) {
+//                context.startForegroundService(intent)
+//            } else {
+//                // Handle the permission request for notifications if needed
+//                ActivityCompat.requestPermissions(context as Activity,
+//                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 100)
+//            }
+//        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            // Start the foreground service for Android O and above
+//            context.startForegroundService(intent)
+//        } else {
+//            // Start a regular service for Android versions lower than O
+//            context.startService(intent)
+//        }
+//    }
 
 }

@@ -72,5 +72,9 @@ data class FavData(
     var id: Int = 0
 }
 
-
-data class AlarmItem(val time: LocalDateTime, val message: String) : Serializable {}
+@Entity(tableName = "AlarmsTable")
+data class AlarmItem(val time: LocalDateTime, val isAlarm: Boolean, val message: String) :
+    Serializable {
+    @PrimaryKey
+    var id: Int = this.hashCode()
+}

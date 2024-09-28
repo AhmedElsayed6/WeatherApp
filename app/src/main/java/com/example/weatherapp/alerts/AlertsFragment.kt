@@ -10,9 +10,12 @@ import com.example.weatherapp.databinding.FragmentAlertsBinding
 import java.time.LocalDateTime
 
 
-class AlertsFragment : Fragment() {
+class AlertsFragment : Fragment(), OnClickSetAlarm, OnClickDeleteAlarm {
 
     private lateinit var binding: FragmentAlertsBinding
+    private val scheduler by lazy {
+        AlarmSchedulerImp(this.requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,12 +27,24 @@ class AlertsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val scheduler = AlarmSchedulerImp(this.requireContext())
+
         binding.btnAddAlert.setOnClickListener {
-            val alarmItem = AlarmItem(time = LocalDateTime.now().plusSeconds(5L), message = "test")
-            scheduler.scheduleAlarm(alarmItem )
+
+            val alertDialog = AlertDialog(this.requireContext(), this)
+            alertDialog.show()
+
+
         }
 
+    }
+
+    override fun setAlarm(time: LocalDateTime, isAlarm: Boolean) {
+        val alarmItem = AlarmItem(time = time, isAlarm, message = "test")
+        scheduler.scheduleAlarm(alarmItem)
+    }
+
+    override fun deleteAlarm() {
+        TODO("Not yet implemented")
     }
 
 

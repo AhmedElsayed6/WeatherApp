@@ -37,10 +37,11 @@ class AlarmReceiver : BroadcastReceiver() {
         )
         val notification =
             NotificationCompat.Builder(context, "Notification").setSmallIcon(R.drawable.icon_alarm)
-                .setContentTitle("NimbusOne Notification").setContentText("This is an alarm")
+                .setContentTitle("Weather Notification").setContentText("This is an alarm")
                 .setContentIntent(
                     pendingIntent
                 )
+                .setAutoCancel(true)
                 .build()
         notificationManager.notify(item.hashCode(), notification)
     }

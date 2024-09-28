@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         val toggle = ActionBarDrawerToggle(
             this, binding.drawerLayout, binding.toolbar, 0, 0
         )
+
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 

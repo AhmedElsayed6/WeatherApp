@@ -1,0 +1,162 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#00FFFFFF">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/background_gradient_darker_item"
+            android:padding="10dp">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieAnimationView4444"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="bluealarmanimation.json"
+                app:lottie_loop="true"
+                tools:layout_conversion_absoluteHeight="75dp"
+                tools:layout_conversion_absoluteWidth="75dp" />
+
+            <RadioGroup
+                android:id="@+id/radioGroupAlarm"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/text_view_2"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_2">
+
+                <RadioButton
+                    android:id="@+id/rbAlarm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="30dp"
+                    android:checked="true"
+                    android:fontFamily="@font/roboto_flex"
+                    android:text="@string/Alarm"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
+
+                <RadioButton
+                    android:id="@+id/rbNotification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_flex"
+                    android:text="@string/NotificationRB"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
+
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/dialog_title1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/roboto_flex"
+                android:text="@string/Alerts"
+                android:textAlignment="center"
+                android:textSize="26sp"
+                app:layout_constraintBottom_toBottomOf="@+id/lottieAnimationView4444"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/lottieAnimationView4444"
+                app:layout_constraintTop_toTopOf="@+id/lottieAnimationView4444" />
+
+
+            <TextView
+                android:id="@+id/text_view_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/roboto_flex"
+                android:text="@string/AlertType"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/lottieAnimationView4444"
+                app:layout_constraintTop_toBottomOf="@+id/lottieAnimationView4444" />
+
+
+            <TextView
+                android:id="@+id/text_view_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/roboto_flex"
+                android:text="@string/SetTimeForAlert"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/radioGroupAlarm"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroupAlarm" />
+
+            <TextView
+                android:id="@+id/tvCurrentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/roboto_flex"
+                android:text="@string/SetTimeForAlert"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="italic"
+                app:layout_constraintStart_toStartOf="@+id/text_view_3"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_3" />
+
+            <Button
+                android:id="@+id/btnSetAlert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="#4565A4"
+                android:text="@string/SetAlert"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/radioGroupAlarm"
+                app:layout_constraintStart_toStartOf="@+id/radioGroupAlarm"
+                app:layout_constraintTop_toBottomOf="@+id/tvCurrentTime" />
+
+            <Button
+                android:id="@+id/btnSetAlertTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="#004565A4"
+                android:text="@string/Set"
+                android:textColor="#000000"
+                app:layout_constraintBottom_toBottomOf="@+id/tvCurrentTime"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvCurrentTime"
+                app:layout_constraintTop_toTopOf="@+id/tvCurrentTime"
+                app:strokeColor="#4565A4"
+                app:strokeWidth="5dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,7 @@ import com.example.weatherapp.data.source.FavData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
-class WeatherLocalDataSource(private val weatherDao: WeatherDao) {
+class WeatherLocalDataSource(private val weatherDao: WeatherDao ) {
 
 
     companion object {

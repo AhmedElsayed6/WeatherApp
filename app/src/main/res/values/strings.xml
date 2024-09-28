@@ -45,4 +45,10 @@
     <string name="English">English</string>
     <string name="Arabic">Arabic</string>
     <string name="Disable">Disable</string>
+    <string name="AlertType">Set Alert Type</string>
+    <string name="Alarm">Alarm</string>
+    <string name="NotificationRB">Notification</string>
+    <string name="SetTimeForAlert">Set Time For Alert</string>
+    <string name="SetAlert">Set Alert</string>
+    <string name="Set">Set</string>
 </resources>

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.weatherapp.MainActivity
+import com.example.weatherapp.R
 import com.example.weatherapp.data.source.WeatherRepository
 import com.example.weatherapp.data.source.local.AppDatabase
 import com.example.weatherapp.data.source.local.WeatherLocalDataSource
@@ -50,7 +51,7 @@ class InitialSetupActivity : AppCompatActivity() {
         var notification: String = ""
         var language: String = ""
 
-        binding.rbEnable.setOnClickListener {
+        binding.rbEnglish.setOnClickListener {
             changLanguage("en")
             viewModel.setLanguage("English")
         }
@@ -85,6 +86,23 @@ class InitialSetupActivity : AppCompatActivity() {
                     findViewById<RadioButton>(binding.radioGroupLanguage.checkedRadioButtonId).text.toString()
             }
 
+            when (language) {
+                getString(R.string.English) -> language = "English"
+                getString(R.string.Arabic) -> language = "Arabic"
+                else->"English"
+            }
+
+            when (location) {
+                getString(R.string.GPS) ->location = "GPS"
+                getString(R.string.Map)-> location = "Map"
+                else->"GPS"
+            }
+
+            when (notification) {
+                getString(R.string.Enable) -> notification = "Enable"
+                getString(R.string.Disable) ->notification = "Disable"
+                else -> "Enable"
+            }
             viewModel.setUpData(location, language, notification)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

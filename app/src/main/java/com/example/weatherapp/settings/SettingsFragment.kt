@@ -65,9 +65,12 @@ class SettingsFragment : Fragment() {
                 val intent = Intent(requireActivity(), MapActivity::class.java)
                 intent.putExtra("fav", false)
                 startActivity(intent)
-            }
-            else{
-                Toast.makeText(this@SettingsFragment.requireActivity(),"Can't open map without internet", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    this@SettingsFragment.requireActivity(),
+                    "Can't open map without internet",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
         }
@@ -82,12 +85,18 @@ class SettingsFragment : Fragment() {
         binding.btnSave.setOnClickListener {
             if (binding.radioGroupLocation.checkedRadioButtonId != -1) {
                 when (view.findViewById<RadioButton>(binding.radioGroupLocation.checkedRadioButtonId).text.toString()) {
-                    "GPS" -> viewModel.setLocationSettings("GPS")
-                    "Map" -> viewModel.setLocationSettings("Map")
+                    getString(R.string.GPS) -> viewModel.setLocationSettings("GPS")
+                    getString(R.string.Map) -> viewModel.setLocationSettings("Map")
+                    else -> "GPS"
                 }
             }
             if (binding.radioGroupNotifications.checkedRadioButtonId != -1) {
-                viewModel.setNotificationSettings(view.findViewById<RadioButton>(binding.radioGroupNotifications.checkedRadioButtonId).text.toString())
+                when (view.findViewById<RadioButton>(binding.radioGroupNotifications.checkedRadioButtonId).text.toString()) {
+                    getString(R.string.Enable) -> viewModel.setNotificationSettings("Enable")
+                    getString(R.string.Disable) -> viewModel.setNotificationSettings("Disable")
+                    else -> "Enable"
+                }
+
             }
             if (binding.radioGroupLanguage.checkedRadioButtonId != -1) {
                 languageSettings =

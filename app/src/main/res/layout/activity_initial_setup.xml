@@ -119,13 +119,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"
                     android:checked="true"
-                    android:text="GPS" />
+                    android:text="@string/GPS" />
 
                 <RadioButton
                     android:id="@+id/rdMap"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Map" />
+                    android:text="@string/Map" />
 
 
             </RadioGroup>
@@ -157,13 +157,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"
                     android:checked="true"
-                    android:text="English" />
+                    android:text="@string/English" />
 
                 <RadioButton
                     android:id="@+id/rdArabic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Arabic" />
+                    android:text="@string/Arabic" />
 
 
             </RadioGroup>
@@ -198,13 +198,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"
                     android:checked="true"
-                    android:text="Enable" />
+                    android:text="@string/Enable" />
 
                 <RadioButton
                     android:id="@+id/rdDisable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Disable" />
+                    android:text="@string/Disable" />
 
 
             </RadioGroup>

@@ -6,7 +6,9 @@ import com.example.weatherapp.data.source.ForecastData
 import com.example.weatherapp.data.source.WeatherData
 import kotlinx.coroutines.flow.Flow
 
-class WeatherLocalDataSource(private val weatherDao: WeatherDao, private val alarmDao: AlarmDao) {
+
+class WeatherLocalDataSource(private val weatherDao: WeatherDao, private val alarmDao: AlarmDao) :
+    IWeatherLocalDataSource {
 
 
     companion object {
@@ -27,54 +29,54 @@ class WeatherLocalDataSource(private val weatherDao: WeatherDao, private val ala
     }
 
 
-    suspend fun addToFav(city: String, lat: Double, lon: Double) {
+    override suspend fun addToFav(city: String, lat: Double, lon: Double) {
         weatherDao.addToFav(FavData(city, lat, lon))
     }
 
-    suspend fun addWeatherData(weatherData: WeatherData) {
+    override suspend fun addWeatherData(weatherData: WeatherData) {
         weatherDao.addWeatherData(weatherData)
     }
 
-    fun getWeatherData(): Flow<WeatherData> {
+    override fun getWeatherData(): Flow<WeatherData> {
         return weatherDao.getWeatherData()
     }
 
-    suspend fun deleteWeatherData() {
+    override suspend fun deleteWeatherData() {
         weatherDao.deleteAllWeatherDataLocal()
     }
 
 
-    suspend fun addForecastData(forecastData: ForecastData) {
+    override suspend fun addForecastData(forecastData: ForecastData) {
         weatherDao.addForecastData(forecastData)
     }
 
-    fun getForecastData(): Flow<ForecastData> {
+    override fun getForecastData(): Flow<ForecastData> {
         return weatherDao.getForecastData()
     }
 
-    suspend fun deleteForecastData() {
+    override suspend fun deleteForecastData() {
         weatherDao.deleteAllForeCastDataLocal()
     }
 
-    fun getAllFavorites(): Flow<List<FavData>> {
+    override fun getAllFavorites(): Flow<List<FavData>> {
         return weatherDao.getAllFavorites()
     }
 
 
-    suspend fun deleteFavoriteData(product: FavData) {
+    override suspend fun deleteFavoriteData(product: FavData) {
         weatherDao.deleteFavoriteData(product)
     }
 
 
-    suspend fun addAlarm(alarmItem: AlarmItem) {
+    override suspend fun addAlarm(alarmItem: AlarmItem) {
         alarmDao.addAlarm(alarmItem)
     }
 
-    fun getAllAlarms(): Flow<List<AlarmItem>> {
+    override fun getAllAlarms(): Flow<List<AlarmItem>> {
         return alarmDao.getAllAlarms()
     }
 
-    suspend fun deleteAlarm(alarmItem: AlarmItem) {
+    override suspend fun deleteAlarm(alarmItem: AlarmItem) {
         alarmDao.deleteAlarm(alarmItem)
     }
 

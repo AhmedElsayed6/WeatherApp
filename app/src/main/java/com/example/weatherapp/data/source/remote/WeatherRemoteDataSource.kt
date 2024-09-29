@@ -7,7 +7,8 @@ import com.example.weatherapp.data.source.WeatherData
 import com.example.weatherapp.network.ApiService
 import retrofit2.Response
 
-class WeatherRemoteDataSource private constructor(private val apiService: ApiService) {
+class WeatherRemoteDataSource private constructor(private val apiService: ApiService) :
+    IWeatherRemoteDataSource {
 
     private val apiKey = BuildConfig.API_KEY
 
@@ -28,7 +29,7 @@ class WeatherRemoteDataSource private constructor(private val apiService: ApiSer
         }
     }
 
-    suspend fun getCurrentWeatherData(
+    override suspend fun getCurrentWeatherData(
         lat: Double,
         lon: Double,
         lang: String
@@ -37,7 +38,7 @@ class WeatherRemoteDataSource private constructor(private val apiService: ApiSer
 
     }
 
-    suspend fun getForecastWeatherData(
+    override suspend fun getForecastWeatherData(
         lat: Double,
         lon: Double,
         lang: String

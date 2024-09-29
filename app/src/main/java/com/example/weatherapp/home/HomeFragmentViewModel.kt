@@ -2,7 +2,7 @@ package com.example.weatherapp.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.data.source.WeatherRepository
+import com.example.weatherapp.data.source.IWeatherRepository
 import com.example.weatherapp.network.ForecastState
 import com.example.weatherapp.network.WeatherState
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class HomeFragmentViewModel(private val weatherRepository: WeatherRepository) : ViewModel() {
+class HomeFragmentViewModel(private val weatherRepository: IWeatherRepository) : ViewModel() {
 
     private val _currentWeatherState = MutableStateFlow<WeatherState>(WeatherState.Loading)
     val currentWeather: StateFlow<WeatherState> = _currentWeatherState.asStateFlow()
@@ -28,7 +28,7 @@ class HomeFragmentViewModel(private val weatherRepository: WeatherRepository) : 
             launch { weatherRepository.deleteForecastDataLocal() }.join()
             launch {
                 getWeatherData(latitude, longitude)
-                getForecastWeatherData(latitude,longitude)
+                getForecastWeatherData(latitude, longitude)
             }
 
         }

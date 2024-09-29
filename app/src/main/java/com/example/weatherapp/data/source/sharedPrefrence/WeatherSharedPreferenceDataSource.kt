@@ -3,7 +3,10 @@ package com.example.weatherapp.data.source.sharedPrefrence
 import android.content.Context
 import android.content.SharedPreferences
 
-class WeatherSharedPreferenceDataSource private constructor(private val context: Context) {
+
+
+class WeatherSharedPreferenceDataSource private constructor(private val context: Context) :
+    IWeatherSharedPreferenceDataSource {
 
     private val sp: SharedPreferences by lazy {
         context.getSharedPreferences("userPreference", Context.MODE_PRIVATE)
@@ -29,76 +32,76 @@ class WeatherSharedPreferenceDataSource private constructor(private val context:
         }
     }
 
-    fun getLanguage(): String {
+    override fun getLanguage(): String {
         return sp.getString("language", "English")!!
     }
 
-    fun getUnitTemp(): String {
+    override fun getUnitTemp(): String {
         return sp.getString("temp", "C")!!
     }
 
-    fun getUnitWind(): String {
+    override fun getUnitWind(): String {
         return sp.getString("wind", "ms")!!
     }
 
-    fun getNotificationSettings(): String {
+    override fun getNotificationSettings(): String {
         return sp.getString("notification", "Enable")!!
     }
 
-    fun getLocationSettings(): String {
+    override fun getLocationSettings(): String {
         return sp.getString("location", "GPS")!!
     }
 
-    fun getLatitude(): Double {
+    override fun getLatitude(): Double {
         return sp.getString("lat", "0.0")!!.toDouble()
     }
 
-    fun getLongitude(): Double {
+    override fun getLongitude(): Double {
         return sp.getString("long", "0.0")!!.toDouble()
     }
 
 
-    fun setLanguage(language: String) {
+    override fun setLanguage(language: String) {
         editor.putString("language", language).apply()
     }
 
-    fun setUnitTemp(unit: String) {
+    override fun setUnitTemp(unit: String) {
         editor.putString("temp", unit).apply()
     }
 
-    fun setUnitWind(unit: String) {
+    override fun setUnitWind(unit: String) {
         editor.putString("wind", unit).apply()
     }
 
-    fun setNotificationSettings(key: String) {
+    override fun setNotificationSettings(key: String) {
         editor.putString("notification", key).apply()
     }
 
-    fun setLocationSettings(key: String) {
+    override fun setLocationSettings(key: String) {
         editor.putString("location", key).apply()
     }
 
-    fun setLatitude(lat: Double) {
+    override fun setLatitude(lat: Double) {
         editor.putString("lat", lat.toString())
     }
 
-    fun setLongitude(long: Double) {
+    override fun setLongitude(long: Double) {
         editor.putString("long", long.toString())
     }
 
-    fun getFirstTime(): Boolean {
+    override fun getFirstTime(): Boolean {
         return sp.getBoolean("firstTime", true)
     }
-    fun getFirstTimeData(): Boolean {
+    override fun getFirstTimeData(): Boolean {
         return sp.getBoolean("firstTimeData", true)
     }
 
 
-    fun setFirstTime() {
+    override fun setFirstTime() {
         editor.putBoolean("firstTime", false).apply()
     }
 
-    fun setFirstTimeData() {
+    override fun setFirstTimeData() {
         editor.putBoolean("firstTimeData", false).apply()
     }
 

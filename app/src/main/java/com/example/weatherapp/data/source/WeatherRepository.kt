@@ -3,9 +3,9 @@ package com.example.weatherapp.data.source
 import android.util.Log
 import com.example.weatherapp.alerts.AlarmState
 import com.example.weatherapp.data.source.local.FavoritesState
-import com.example.weatherapp.data.source.local.WeatherLocalDataSource
-import com.example.weatherapp.data.source.remote.WeatherRemoteDataSource
-import com.example.weatherapp.data.source.sharedPrefrence.WeatherSharedPreferenceDataSource
+import com.example.weatherapp.data.source.local.IWeatherLocalDataSource
+import com.example.weatherapp.data.source.remote.IWeatherRemoteDataSource
+import com.example.weatherapp.data.source.sharedPrefrence.IWeatherSharedPreferenceDataSource
 import com.example.weatherapp.network.ForecastState
 import com.example.weatherapp.network.WeatherState
 import kotlinx.coroutines.flow.Flow
@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class WeatherRepository private constructor(
-    private val weatherLocalDataSource: WeatherLocalDataSource,
-    private val weatherRemoteDataSource: WeatherRemoteDataSource,
-    private val weatherSharedPreferenceDataSource: WeatherSharedPreferenceDataSource
-) {
+    private val weatherLocalDataSource: IWeatherLocalDataSource,
+    private val weatherRemoteDataSource: IWeatherRemoteDataSource,
+    private val weatherSharedPreferenceDataSource: IWeatherSharedPreferenceDataSource
+) : IWeatherRepository {
 
     companion object {
         @Volatile
@@ -24,9 +24,9 @@ class WeatherRepository private constructor(
 
         @Synchronized
         fun getInstance(
-            weatherLocalDataSource: WeatherLocalDataSource,
-            weatherRemoteDataSource: WeatherRemoteDataSource,
-            weatherSharedPreferenceDataSource: WeatherSharedPreferenceDataSource
+            weatherLocalDataSource: IWeatherLocalDataSource,
+            weatherRemoteDataSource: IWeatherRemoteDataSource,
+            weatherSharedPreferenceDataSource: IWeatherSharedPreferenceDataSource
         ): WeatherRepository {
             return instance ?: synchronized(this) {
                 val tempInstance = WeatherRepository(
@@ -41,7 +41,7 @@ class WeatherRepository private constructor(
     }
 
 
-    fun getCurrentWeather(lat: Double, long: Double): Flow<WeatherState> = flow {
+    override fun getCurrentWeather(lat: Double, long: Double): Flow<WeatherState> = flow {
         try {
             val response = weatherRemoteDataSource.getCurrentWeatherData(
                 lat,
@@ -61,33 +61,33 @@ class WeatherRepository private constructor(
         }
     }
 
-    fun getCurrentWeatherLocal(): Flow<WeatherState> = flow {
+    override fun getCurrentWeatherLocal(): Flow<WeatherState> = flow {
         weatherLocalDataSource.getWeatherData()
             .catch { emit(WeatherState.Error("Error Found")) }.collect {
-                if(it!=null)
-                emit(WeatherState.Success(it))
+                if (it != null)
+                    emit(WeatherState.Success(it))
             }
     }
 
-    suspend fun deleteCurrentWeatherLocal() {
+    override suspend fun deleteCurrentWeatherLocal() {
         weatherLocalDataSource.deleteWeatherData()
 
     }
 
-    suspend fun deleteForecastDataLocal() {
+    override suspend fun deleteForecastDataLocal() {
         weatherLocalDataSource.deleteForecastData()
     }
 
 
-    fun getForecastLocal(): Flow<ForecastState> = flow {
+    override fun getForecastLocal(): Flow<ForecastState> = flow {
         weatherLocalDataSource.getForecastData()
             .catch { emit(ForecastState.Error("Error Found")) }.collect {
-                if(it!=null)
-                emit(ForecastState.Success(it))
+                if (it != null)
+                    emit(ForecastState.Success(it))
             }
     }
 
-    fun getCurrentForecastWeather(lat: Double = 10.0, long: Double = 10.0): Flow<ForecastState> =
+    override fun getCurrentForecastWeather(lat: Double, long: Double): Flow<ForecastState> =
         flow {
             try {
                 val response = weatherRemoteDataSource.getForecastWeatherData(
@@ -100,8 +100,8 @@ class WeatherRepository private constructor(
                     weatherLocalDataSource.getForecastData()
                         .catch { emit(ForecastState.Error("Error Found")) }.collect {
                             weatherSharedPreferenceDataSource.setFirstTimeData()
-                            if(it!=null)
-                            emit(ForecastState.Success(it))
+                            if (it != null)
+                                emit(ForecastState.Success(it))
                             else
                                 emit(ForecastState.Error("Error Found"))
                         }
@@ -112,84 +112,84 @@ class WeatherRepository private constructor(
         }
 
 
-    fun setFirstTime() {
+    override fun setFirstTime() {
         weatherSharedPreferenceDataSource.setFirstTime()
     }
 
-    fun getFirstTime(): Boolean {
+    override fun getFirstTime(): Boolean {
         return weatherSharedPreferenceDataSource.getFirstTime()
     }
 
-    fun setFirstTimeData() {
+    override fun setFirstTimeData() {
         weatherSharedPreferenceDataSource.setFirstTimeData()
     }
 
-    fun getFirstTimeData(): Boolean {
+    override fun getFirstTimeData(): Boolean {
         return weatherSharedPreferenceDataSource.getFirstTimeData()
     }
 
-    fun setLanguage(language: String) {
+    override fun setLanguage(language: String) {
         weatherSharedPreferenceDataSource.setLanguage(language)
     }
 
-    fun setUnitTemp(unit: String) {
+    override fun setUnitTemp(unit: String) {
         Log.i("here", "setUnitTemp: in sp $unit")
         weatherSharedPreferenceDataSource.setUnitTemp(unit)
     }
 
-    fun setUnitWind(unit: String) {
+    override fun setUnitWind(unit: String) {
         weatherSharedPreferenceDataSource.setUnitWind(unit)
     }
 
-    fun setNotificationSettings(key: String) {
+    override fun setNotificationSettings(key: String) {
         weatherSharedPreferenceDataSource.setNotificationSettings(key)
     }
 
-    fun setLocationSettings(key: String) {
+    override fun setLocationSettings(key: String) {
         weatherSharedPreferenceDataSource.setLocationSettings(key)
     }
 
-    fun setLatitude(lat: Double) {
+    override fun setLatitude(lat: Double) {
         weatherSharedPreferenceDataSource.setLatitude(lat)
     }
 
-    fun setLongitude(long: Double) {
+    override fun setLongitude(long: Double) {
         weatherSharedPreferenceDataSource.setLongitude(long)
     }
 
-    fun getLatitude(): Double {
+    override fun getLatitude(): Double {
         return weatherSharedPreferenceDataSource.getLatitude()
     }
 
-    fun getLongitude(): Double {
+    override fun getLongitude(): Double {
         return weatherSharedPreferenceDataSource.getLongitude()
     }
 
-    fun getNotificationSettings(): String {
+    override fun getNotificationSettings(): String {
         return weatherSharedPreferenceDataSource.getNotificationSettings()
     }
 
-    fun getLanguageSettings(): String {
+    override fun getLanguageSettings(): String {
         return weatherSharedPreferenceDataSource.getLanguage()
     }
 
-    fun getLocationSettings(): String {
+    override fun getLocationSettings(): String {
         return weatherSharedPreferenceDataSource.getLocationSettings()
     }
 
-    fun getUnitWind(): String {
+    override fun getUnitWind(): String {
         return weatherSharedPreferenceDataSource.getUnitWind()
     }
 
-    fun getUnitTemp(): String {
+    override fun getUnitTemp(): String {
         return weatherSharedPreferenceDataSource.getUnitTemp()
     }
 
-    suspend fun addToFav(city: String, lat: Double, lon: Double) {
+    override suspend fun addToFav(city: String, lat: Double, lon: Double) {
         weatherLocalDataSource.addToFav(city, lat, lon)
     }
 
-    suspend fun getAllFavorites(): Flow<FavoritesState> {
+    override suspend fun getAllFavorites(): Flow<FavoritesState> {
         return flow {
             weatherLocalDataSource.getAllFavorites().collect() { favList ->
                 emit(FavoritesState.Success(favList))
@@ -198,16 +198,16 @@ class WeatherRepository private constructor(
 
     }
 
-    suspend fun deleteFavoriteData(product: FavData) {
+    override suspend fun deleteFavoriteData(product: FavData) {
         weatherLocalDataSource.deleteFavoriteData(product)
     }
 
 
-    suspend fun addAlarm(alarmItem: AlarmItem) {
+    override suspend fun addAlarm(alarmItem: AlarmItem) {
         weatherLocalDataSource.addAlarm(alarmItem)
     }
 
-    fun getAllAlarms(): Flow<AlarmState> {
+    override fun getAllAlarms(): Flow<AlarmState> {
         return flow {
             weatherLocalDataSource.getAllAlarms().collect() { alarmData ->
                 emit(AlarmState.Success(alarmData))
@@ -215,7 +215,7 @@ class WeatherRepository private constructor(
         }
     }
 
-    suspend fun deleteAlarm(alarmItem: AlarmItem) {
+    override suspend fun deleteAlarm(alarmItem: AlarmItem) {
         weatherLocalDataSource.deleteAlarm(alarmItem)
     }
 

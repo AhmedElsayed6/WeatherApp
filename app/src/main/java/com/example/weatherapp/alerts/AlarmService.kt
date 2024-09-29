@@ -50,7 +50,7 @@ class AlarmService : Service() {
         layoutParams.gravity = Gravity.TOP or Gravity.START
         layoutParams.x = 0
         layoutParams.y = 0
-        binding.tvAlarmMessage.text = alarmItem.message
+        binding.tvAlarmMessage.text = "This is an alarm!"
         val dateTime = LocalDateTime.now()
         val dayOfWeek = dateTime.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
         binding.tvAlarmCurrentTime.text =

@@ -31,7 +31,7 @@ class AlarmRecyclerViewAdapter(
         val item = data[position]
         with(holder.binding) {
             tvAlarmType.text=if(item.isAlarm) "Alarm" else "Notification"
-            tvAlarmDateTime.text=item.time.format(DateTimeFormatter.ofPattern("yy dd MM HH:mm"))
+            tvAlarmDateTime.text=item.time.format(DateTimeFormatter.ofPattern("yyyy/dd/MM HH:mm"))
             animationAlarm.setAnimation(if(item.isAlarm) "bluealarmanimation.json" else "blueclockanimation.json")
             btnDelete.setOnClickListener{
                 ConfirmationDialog(context,item,deleteAlarm).show()

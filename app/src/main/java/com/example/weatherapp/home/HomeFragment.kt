@@ -362,10 +362,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun refreshData() {
-        binding.clHomeFragment.visibility = View.GONE
-        binding.pb.visibility = View.VISIBLE
+
 
         if (isNetworkAvailable(this.requireContext())) {
+            binding.clHomeFragment.visibility = View.GONE
+            binding.pb.visibility = View.VISIBLE
             binding.cvNetwork.visibility = View.GONE
             // is it gps
             if (viewModel.getLocationSettings() == "GPS") {
@@ -379,6 +380,10 @@ class HomeFragment : Fragment() {
 
             }
         }
+        else{
+            Toast.makeText(this.requireContext(), "Please enable internet to refresh", Toast.LENGTH_SHORT).show()
+        }
+
         binding.swipeRefresh.isRefreshing = false
     }
 }

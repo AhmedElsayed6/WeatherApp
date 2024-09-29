@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.MainActivity
@@ -61,11 +62,14 @@ class SettingsFragment : Fragment() {
         initUnits()
         binding.rbMap.setOnClickListener {
             if (isNetworkAvailable(this.requireContext())) {
-
+                val intent = Intent(requireActivity(), MapActivity::class.java)
+                intent.putExtra("fav", false)
+                startActivity(intent)
             }
-            val intent = Intent(requireActivity(), MapActivity::class.java)
-            intent.putExtra("fav", false)
-            startActivity(intent)
+            else{
+                Toast.makeText(this@SettingsFragment.requireActivity(),"Can't open map without internet", Toast.LENGTH_SHORT).show()
+            }
+
         }
         binding.rbEnglish.setOnClickListener {
             changLanguage("en")

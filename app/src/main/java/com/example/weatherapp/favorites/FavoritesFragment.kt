@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -27,9 +28,11 @@ import com.example.weatherapp.databinding.FragmentFavoritesBinding
 import com.example.weatherapp.map.MapActivity
 import com.example.weatherapp.network.API
 import com.example.weatherapp.util.WeatherViewModelFactory
+import com.example.weatherapp.util.isNetworkAvailable
 import kotlinx.coroutines.launch
 
-class FavoritesFragment : Fragment(), OnClickHandleButton , OnClickDeleteFavorite , OnClickFavoriteDetails {
+class FavoritesFragment : Fragment(), OnClickHandleButton, OnClickDeleteFavorite,
+    OnClickFavoriteDetails {
     private lateinit var binding: FragmentFavoritesBinding
     private val viewModel: FavoritesFragmentViewModel by lazy {
         val factory = WeatherViewModelFactory(
@@ -55,10 +58,20 @@ class FavoritesFragment : Fragment(), OnClickHandleButton , OnClickDeleteFavorit
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         binding.btnAddToFav.setOnClickListener {
-            val intent = Intent(requireActivity(), MapActivity::class.java)
-            intent.putExtra("fav", true)
-            startActivity(intent)
+            if (isNetworkAvailable(this.requireContext())) {
+                val intent = Intent(requireActivity(), MapActivity::class.java)
+                intent.putExtra("fav", true)
+                startActivity(intent)
+            } else {
+                Toast.makeText(
+                    this@FavoritesFragment.requireActivity(),
+                    "Can't open map without internet",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         lifecycleScope.launch {
@@ -79,7 +92,11 @@ class FavoritesFragment : Fragment(), OnClickHandleButton , OnClickDeleteFavorit
                             managerFav.setOrientation(RecyclerView.VERTICAL)
                             binding.rvFavorites.layoutManager = managerFav
                             binding.rvFavorites.adapter =
-                                FavRecyclerViewAdapter(it.favoritesData, this@FavoritesFragment, this@FavoritesFragment)
+                                FavRecyclerViewAdapter(
+                                    it.favoritesData,
+                                    this@FavoritesFragment,
+                                    this@FavoritesFragment
+                                )
                         }
                     }
                 }
@@ -98,9 +115,9 @@ class FavoritesFragment : Fragment(), OnClickHandleButton , OnClickDeleteFavorit
 
     override fun deleteItem(favData: FavData) {
         val dialog =
-            FavoritesDialog(this.requireContext() , this)
+            FavoritesDialog(this.requireContext(), this)
         dialog.show()
-        dialog.showInfoForFavorites( favData )
+        dialog.showInfoForFavorites(favData)
 
     }
 
@@ -109,10 +126,19 @@ class FavoritesFragment : Fragment(), OnClickHandleButton , OnClickDeleteFavorit
     }
 
     override fun goToDetails(favData: FavData) {
-        val bundle = Bundle().apply {
-            putSerializable("data", favData)
+        if (isNetworkAvailable(this.requireContext())) {
+            val bundle = Bundle().apply {
+                putSerializable("data", favData)
+            }
+            findNavController().navigate(R.id.favoritesDetailsFragment, bundle)
+        } else {
+            Toast.makeText(
+                this@FavoritesFragment.requireActivity(),
+                "Can't check details without internet",
+                Toast.LENGTH_SHORT
+            ).show()
         }
-        findNavController().navigate(R.id.favoritesDetailsFragment, bundle)
+
     }
 
 

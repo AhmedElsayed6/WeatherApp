@@ -1,8 +1,11 @@
 package com.example.weatherapp.initial
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
+import android.os.LocaleList
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -15,18 +18,21 @@ import com.example.weatherapp.data.source.sharedPrefrence.WeatherSharedPreferenc
 import com.example.weatherapp.databinding.ActivityInitialSetupBinding
 import com.example.weatherapp.map.MapActivity
 import com.example.weatherapp.network.API
-import com.example.weatherapp.settings.SettingsFragmentViewModel
 import com.example.weatherapp.util.WeatherViewModelFactory
+import com.example.weatherapp.util.isNetworkAvailable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class InitialSetupActivity : AppCompatActivity() {
     private lateinit var binding: ActivityInitialSetupBinding
     private val viewModel: InitialSetupViewModel by lazy {
         val factory = WeatherViewModelFactory(
             WeatherRepository.getInstance(
-                WeatherLocalDataSource.getInstance(AppDatabase.getInstance(this).weatherDao(),
-                    AppDatabase.getInstance(this).alarmDao()),
+                WeatherLocalDataSource.getInstance(
+                    AppDatabase.getInstance(this).weatherDao(),
+                    AppDatabase.getInstance(this).alarmDao()
+                ),
                 WeatherRemoteDataSource.getInstance(API.retrofitService),
                 WeatherSharedPreferenceDataSource.getInstance(this)
             )
@@ -44,10 +50,24 @@ class InitialSetupActivity : AppCompatActivity() {
         var notification: String = ""
         var language: String = ""
 
+        binding.rbEnable.setOnClickListener {
+            changLanguage("en")
+            viewModel.setLanguage("English")
+        }
+        binding.rdArabic.setOnClickListener {
+            changLanguage("ar")
+            viewModel.setLanguage("Arabic")
+        }
         binding.rdMap.setOnClickListener {
-            val intent = Intent(this, MapActivity::class.java)
-            intent.putExtra("fav", false)
-            startActivity(intent)
+            if (isNetworkAvailable(this)) {
+                val intent = Intent(this, MapActivity::class.java)
+                intent.putExtra("fav", false)
+                startActivity(intent)
+            } else {
+
+                Toast.makeText(this, "Can't open map without internet", Toast.LENGTH_SHORT).show()
+            }
+
         }
         binding.btnOkay.setOnClickListener {
             if (binding.radioGroupLocation.checkedRadioButtonId != -1) {
@@ -87,5 +107,16 @@ class InitialSetupActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+
+    fun changLanguage(code: String) {
+        val local = Locale(code)
+        Locale.setDefault(local)
+        val config = Configuration()
+        config.setLocales(LocaleList(local, Locale.US))
+        config.setLayoutDirection(Locale.US)
+        resources.updateConfiguration(config, resources.displayMetrics)
+        this.recreate()
     }
 }

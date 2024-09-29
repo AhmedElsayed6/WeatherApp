@@ -30,5 +30,11 @@ class InitialSetupViewModel(private val weatherRepository: WeatherRepository) : 
 
     }
 
+    fun setLanguage(language: String) {
+        weatherRepository.setLanguage(language)
+    }
+
+
+
 
 }

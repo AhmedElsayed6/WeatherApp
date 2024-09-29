@@ -153,7 +153,7 @@ class SettingsFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        (activity as MainActivity).supportActionBar?.title = "Settings"
+        (activity as MainActivity).supportActionBar?.title = getString(R.string.Settings)
     }
 
 }

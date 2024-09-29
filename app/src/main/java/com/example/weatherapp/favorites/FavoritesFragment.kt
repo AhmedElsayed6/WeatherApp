@@ -109,7 +109,7 @@ class FavoritesFragment : Fragment(), OnClickHandleButton, OnClickDeleteFavorite
 
     override fun onStart() {
         super.onStart()
-        (activity as MainActivity).supportActionBar?.title = "Favorites"
+        (activity as MainActivity).supportActionBar?.title =  getString(R.string.Favorites)
     }
 
 

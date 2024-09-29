@@ -20,6 +20,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.MainActivity
+import com.example.weatherapp.R
 import com.example.weatherapp.data.source.AlarmItem
 import com.example.weatherapp.data.source.WeatherRepository
 import com.example.weatherapp.data.source.local.AppDatabase
@@ -141,7 +142,7 @@ class AlertsFragment : Fragment(), OnClickSetAlarm, OnClickDeleteAlarm {
 
     override fun onStart() {
         super.onStart()
-        (activity as MainActivity).supportActionBar?.title = "Alerts"
+        (activity as MainActivity).supportActionBar?.title = getString(R.string.Alerts)
     }
 
 

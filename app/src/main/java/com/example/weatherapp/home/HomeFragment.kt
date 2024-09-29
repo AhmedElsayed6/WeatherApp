@@ -23,6 +23,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.MainActivity
+import com.example.weatherapp.R
 import com.example.weatherapp.data.source.WeatherRepository
 import com.example.weatherapp.data.source.local.AppDatabase
 import com.example.weatherapp.data.source.local.WeatherLocalDataSource
@@ -108,7 +109,7 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        (activity as MainActivity).supportActionBar?.title = "Home"
+        (activity as MainActivity).supportActionBar?.title = getString(R.string.Home)
         if (viewModel.getFirstTimeData()) {
             // handle network
             if (isNetworkAvailable(this.requireContext())) {

@@ -8,6 +8,7 @@ import com.example.weatherapp.data.source.Weather
 import com.example.weatherapp.data.source.WeatherData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -64,8 +65,10 @@ fun Double.toFahrenheit(): Double {
     return (this * 9 / 5) + 32
 }
 
-fun Double.toTwoDecimalPlaces(): Double {
-    return String.format("%.2f", this).toDouble()
+fun Double.toTwoDecimalPlaces(locale: Locale = Locale.US): String {
+    val numberFormat = NumberFormat.getInstance(locale)
+    val parsedNumber = numberFormat.parse(this.toString())?.toDouble() ?: throw NumberFormatException("Cannot parse: $this")
+    return String.format(locale, "%.2f", parsedNumber)
 }
 
 fun isNetworkAvailable(context: Context): Boolean {
@@ -115,25 +118,5 @@ object Converters {
         return Gson().fromJson(value, listType)
     }
 
-    fun checkAndChangLocality() {
-//        val languageCode = if(sharedViewModel.settingsLanguage.value == Constants.ENGLISH_SELECTION_VALUE) "en" else "ar"
-//        val locale = resources.configuration.locales[0]
-//
-//        if(locale.language != languageCode)
-//        {
-//
-//            val newLocale = Locale(languageCode)
-//            Locale.setDefault(newLocale)
-//
-//            val config = resources.configuration
-//
-//            config.setLocale(newLocale)
-//            config.setLayoutDirection(newLocale)
-//
-//            resources.updateConfiguration(config,resources.displayMetrics)
-//
-//            recreate()
-//
-//        }
-    }
+
 }

@@ -1,7 +1,9 @@
 package com.example.weatherapp.settings
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
+import android.os.LocaleList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +22,7 @@ import com.example.weatherapp.map.MapActivity
 import com.example.weatherapp.network.API
 import com.example.weatherapp.util.WeatherViewModelFactory
 import com.example.weatherapp.util.isNetworkAvailable
+import java.util.Locale
 
 
 class SettingsFragment : Fragment() {
@@ -64,6 +67,14 @@ class SettingsFragment : Fragment() {
             intent.putExtra("fav", false)
             startActivity(intent)
         }
+        binding.rbEnglish.setOnClickListener {
+            changLanguage("en")
+            viewModel.setLanguage("English")
+        }
+        binding.rbArabic.setOnClickListener {
+            changLanguage("ar")
+            viewModel.setLanguage("Arabic")
+        }
         binding.btnSave.setOnClickListener {
             if (binding.radioGroupLocation.checkedRadioButtonId != -1) {
                 when (view.findViewById<RadioButton>(binding.radioGroupLocation.checkedRadioButtonId).text.toString()) {
@@ -75,7 +86,12 @@ class SettingsFragment : Fragment() {
                 viewModel.setNotificationSettings(view.findViewById<RadioButton>(binding.radioGroupNotifications.checkedRadioButtonId).text.toString())
             }
             if (binding.radioGroupLanguage.checkedRadioButtonId != -1) {
-                viewModel.setLanguage(view.findViewById<RadioButton>(binding.radioGroupLanguage.checkedRadioButtonId).text.toString())
+                languageSettings =
+                    view.findViewById<RadioButton>(binding.radioGroupLanguage.checkedRadioButtonId).text.toString()
+                when (languageSettings) {
+                    getString(R.string.English) -> viewModel.setLanguage("English")
+                    getString(R.string.Arabic) -> viewModel.setLanguage("Arabic")
+                }
             }
             if (binding.radioGroupTempUnits.checkedRadioButtonId != -1) {
                 //localcise()
@@ -91,13 +107,20 @@ class SettingsFragment : Fragment() {
                     getString(R.string.MileHour) -> viewModel.setUnitWind("mh")
                 }
             }
+
+
         }
     }
 
-    // local class you set its you give it a code you put a var that has config
-    // new local.
-    // update operation .
-    //recreate
+    fun changLanguage(code: String) {
+        val local = Locale(code)
+        Locale.setDefault(local)
+        val config = Configuration()
+        config.setLocales(LocaleList(local, Locale.US))
+        config.setLayoutDirection(Locale.US)
+        resources.updateConfiguration(config, resources.displayMetrics)
+        requireActivity().recreate()
+    }
 
     private fun initUnits() {
 
@@ -113,7 +136,6 @@ class SettingsFragment : Fragment() {
         binding.radioGroupTempUnits.check(if (tempUnit == "C") R.id.rbC else if (tempUnit == "K") R.id.rbK else R.id.rbF)
         binding.radioGroupSpeedUnits.check(if (windSpeedUnit == "ms") R.id.rbMS else R.id.rbMH)
     }
-
 
 
     override fun onStart() {

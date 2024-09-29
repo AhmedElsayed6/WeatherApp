@@ -33,7 +33,7 @@ class FavoritesFragmentViewModel(private val weatherRepository: WeatherRepositor
 
     fun deleteFavorite(item: FavData) {
         viewModelScope.launch(Dispatchers.IO) {
-            weatherRepository.deleteProduct(item)
+            weatherRepository.deleteFavoriteData(item)
         }
     }
 }

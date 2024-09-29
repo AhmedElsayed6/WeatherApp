@@ -39,8 +39,8 @@ class WeatherLocalDataSource(private val weatherDao: WeatherDao, private val ala
         return weatherDao.getWeatherData()
     }
 
-    suspend fun deleteWeatherData(weatherData: WeatherData) {
-        weatherDao.deleteWeatherData(weatherData)
+    suspend fun deleteWeatherData() {
+        weatherDao.deleteAllWeatherDataLocal()
     }
 
 
@@ -52,8 +52,8 @@ class WeatherLocalDataSource(private val weatherDao: WeatherDao, private val ala
         return weatherDao.getForecastData()
     }
 
-    suspend fun deleteForecastData(forecastData: ForecastData) {
-        weatherDao.deleteForecastData(forecastData)
+    suspend fun deleteForecastData() {
+        weatherDao.deleteAllForeCastDataLocal()
     }
 
     fun getAllFavorites(): Flow<List<FavData>> {
@@ -61,8 +61,8 @@ class WeatherLocalDataSource(private val weatherDao: WeatherDao, private val ala
     }
 
 
-    suspend fun deleteProduct(product: FavData) {
-        weatherDao.deleteProduct(product)
+    suspend fun deleteFavoriteData(product: FavData) {
+        weatherDao.deleteFavoriteData(product)
     }
 
 

@@ -37,6 +37,10 @@ import com.example.weatherapp.util.isNetworkAvailable
 import com.example.weatherapp.util.toAMPM
 import com.example.weatherapp.util.toDaysTime
 import com.example.weatherapp.util.toDrawable
+import com.example.weatherapp.util.toFahrenheit
+import com.example.weatherapp.util.toKelvin
+import com.example.weatherapp.util.toMilesPerHour
+import com.example.weatherapp.util.toTwoDecimalPlaces
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -67,6 +71,8 @@ class HomeFragment : Fragment() {
         )
         ViewModelProvider(this, factory)[HomeFragmentViewModel::class.java]
     }
+    private var tempUnit: String = ""
+    private var speedUnit: String = ""
 
 
     override fun onCreateView(
@@ -93,7 +99,9 @@ class HomeFragment : Fragment() {
         }
 
         binding.swipeRefresh.setOnRefreshListener {
-            refreshData()
+            binding.swipeRefresh.postDelayed({
+                refreshData()
+            }, 1000)
         }
 
     }
@@ -136,9 +144,11 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.currentWeather.collect {
+                    tempUnit = viewModel.getUnitTemp()
+                    speedUnit = viewModel.getWindSpeedUnit()
                     when (it) {
                         is WeatherState.Error -> {
-                            Log.i("here", "onViewCreated: " + it.message)
+                            Log.i("here", "onViewCreated: Weather State " + it.message)
                         }
 
                         is WeatherState.Loading -> {
@@ -151,18 +161,35 @@ class HomeFragment : Fragment() {
                             binding.tvDateAndTime.text =
                                 it.weatherData.dt.toDaysTime() + " " + it.weatherData.dt.toAMPM()
                             binding.tvCityName.text = it.weatherData.name
-                            binding.tvTemp.text =
-                                it.weatherData.main.temp.toString() + " ${viewModel.getUnitTemp()}"
+                            when (tempUnit) {
+                                "C" -> binding.tvTemp.text =
+                                    it.weatherData.main.temp.toTwoDecimalPlaces()
+                                        .toString() + " $tempUnit" + "°"
+
+                                "K" -> binding.tvTemp.text =
+                                    it.weatherData.main.temp.toKelvin().toTwoDecimalPlaces()
+                                        .toString() + " $tempUnit" + "°"
+
+                                "F" -> binding.tvTemp.text =
+                                    it.weatherData.main.temp.toFahrenheit().toTwoDecimalPlaces()
+                                        .toString() + " $tempUnit" + "°"
+                            }
                             binding.tvDescription.text =
-                                it.weatherData.weather.get(0).description.replaceFirstChar { it.uppercaseChar() }
-                            binding.ivImage.setImageResource(it.weatherData.weather.get(0).icon.toDrawable())
-                            binding.tvWindSpeed.text =
-                                it.weatherData.wind.speed.toString() + " ${viewModel.getWindSpeedUnit()}"
+                                it.weatherData.weather[0].description.replaceFirstChar { it.uppercaseChar() }
+                            binding.ivImage.setImageResource(it.weatherData.weather[0].icon.toDrawable())
+                            when (speedUnit) {
+                                "ms" -> binding.tvWindSpeed.text =
+                                    it.weatherData.wind.speed.toString() + " Meter/Sec"
+
+                                "mh" -> binding.tvWindSpeed.text =
+                                    it.weatherData.wind.speed.toMilesPerHour().toTwoDecimalPlaces()
+                                        .toString() + " Mile/Hour"
+
+                            }
                             binding.tvHumidity.text = it.weatherData.main.humidity.toString() + " %"
                             binding.tvPressure.text =
                                 it.weatherData.main.pressure.toString() + " hpa"
                             binding.tvCloud.text = it.weatherData.clouds.all.toString() + " %"
-                            Log.i("here", "onViewCreated weather Data: " + it.weatherData.weather)
                         }
                     }
                 }
@@ -171,6 +198,8 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.currentForecastWeather.collect {
+                    tempUnit = viewModel.getUnitTemp()
+                    speedUnit = viewModel.getWindSpeedUnit()
                     when (it) {
                         is ForecastState.Error -> {
                             Log.i("here", "onViewCreated: forecast " + it.message)
@@ -225,7 +254,7 @@ class HomeFragment : Fragment() {
         )
     }
 
-    private fun initPermissions() {
+    private fun initPermissions(ref: Boolean = false) {
         if (checkPermissions()) {
             binding.cvPermissions.visibility = View.GONE
             binding.cvLocation.visibility = View.VISIBLE
@@ -234,11 +263,18 @@ class HomeFragment : Fragment() {
                 getFreshLocation()
                 viewModel.setLongitude(longitude)
                 viewModel.setLatitude(latitude)
-                viewModel.getWeatherData(latitude, longitude)
-                viewModel.getForecastWeatherData(latitude, longitude)
+                if (ref) {
+                    viewModel.refreshData(latitude, longitude)
+                } else {
+                    viewModel.getWeatherData(latitude, longitude)
+                    viewModel.getForecastWeatherData(latitude, longitude)
+                }
+
 
             }
         } else {
+
+
             binding.cvPermissions.visibility = View.VISIBLE
             requestPermissions(
                 arrayOf(
@@ -291,7 +327,12 @@ class HomeFragment : Fragment() {
                 binding.cvLocation.visibility = View.VISIBLE
                 if (isLocationEnabled()) {
                     binding.cvLocation.visibility = View.GONE
-
+                    binding.cvLocation.visibility = View.GONE
+                    getFreshLocation()
+                    viewModel.setLongitude(longitude)
+                    viewModel.setLatitude(latitude)
+                    viewModel.getWeatherData(latitude, longitude)
+                    viewModel.getForecastWeatherData(latitude, longitude)
                     launchStateFlows()
                 }
             }
@@ -321,20 +362,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun refreshData() {
-        binding.clHomeFragment.visibility=View.GONE
+        binding.clHomeFragment.visibility = View.GONE
+        binding.pb.visibility = View.VISIBLE
 
         if (isNetworkAvailable(this.requireContext())) {
             binding.cvNetwork.visibility = View.GONE
             // is it gps
             if (viewModel.getLocationSettings() == "GPS") {
-                initPermissions()
+                initPermissions(true)
             }
             // map
             else {
                 latitude = viewModel.getLatitude()
                 longitude = viewModel.getLongitude()
-                viewModel.getWeatherData(latitude, longitude)
-                viewModel.getForecastWeatherData(latitude, longitude)
+                viewModel.refreshData(latitude, longitude)
+
             }
         }
         binding.swipeRefresh.isRefreshing = false

@@ -20,7 +20,7 @@ interface WeatherDao {
     fun getAllFavorites(): Flow<List<FavData>>
 
     @Delete
-    suspend fun deleteProduct(favData: FavData)
+    suspend fun deleteFavoriteData(favData: FavData)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addWeatherData(weatherData: WeatherData): Long
@@ -28,8 +28,6 @@ interface WeatherDao {
     @Query("Select * from WeatherDataTable")
     fun getWeatherData(): Flow<WeatherData>
 
-    @Delete
-    suspend fun deleteWeatherData(weatherData: WeatherData)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addForecastData(forecastData: ForecastData): Long
@@ -37,9 +35,13 @@ interface WeatherDao {
     @Query("Select * from ForecastDataTable")
     fun getForecastData(): Flow<ForecastData>
 
-    @Delete
-    suspend fun deleteForecastData(forecastData: ForecastData)
 
+    // Function to delete all rows from the weather table
+    @Query("DELETE  FROM WeatherDataTable")
+    suspend fun deleteAllWeatherDataLocal()
+
+    @Query("DELETE FROM ForecastDataTable")
+    suspend fun deleteAllForeCastDataLocal()
 
 
 }

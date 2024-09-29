@@ -21,6 +21,19 @@ class HomeFragmentViewModel(private val weatherRepository: WeatherRepository) : 
     val currentForecastWeather: StateFlow<ForecastState> =
         _currentForecastWeatherState.asStateFlow()
 
+
+    fun refreshData(latitude: Double, longitude: Double) {
+        viewModelScope.launch(Dispatchers.IO) {
+            launch { weatherRepository.deleteCurrentWeatherLocal() }.join()
+            launch { weatherRepository.deleteForecastDataLocal() }.join()
+            launch {
+                getWeatherData(latitude, longitude)
+                getForecastWeatherData(latitude,longitude)
+            }
+
+        }
+    }
+
     fun getWeatherData(latitude: Double, longitude: Double) {
         viewModelScope.launch(Dispatchers.IO) {
             weatherRepository.getCurrentWeather(latitude, longitude).collect {

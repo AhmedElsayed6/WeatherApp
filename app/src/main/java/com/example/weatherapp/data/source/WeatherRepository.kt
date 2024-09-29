@@ -64,13 +64,25 @@ class WeatherRepository private constructor(
     fun getCurrentWeatherLocal(): Flow<WeatherState> = flow {
         weatherLocalDataSource.getWeatherData()
             .catch { emit(WeatherState.Error("Error Found")) }.collect {
+                if(it!=null)
                 emit(WeatherState.Success(it))
             }
     }
 
+    suspend fun deleteCurrentWeatherLocal() {
+        weatherLocalDataSource.deleteWeatherData()
+
+    }
+
+    suspend fun deleteForecastDataLocal() {
+        weatherLocalDataSource.deleteForecastData()
+    }
+
+
     fun getForecastLocal(): Flow<ForecastState> = flow {
         weatherLocalDataSource.getForecastData()
             .catch { emit(ForecastState.Error("Error Found")) }.collect {
+                if(it!=null)
                 emit(ForecastState.Success(it))
             }
     }
@@ -88,7 +100,10 @@ class WeatherRepository private constructor(
                     weatherLocalDataSource.getForecastData()
                         .catch { emit(ForecastState.Error("Error Found")) }.collect {
                             weatherSharedPreferenceDataSource.setFirstTimeData()
+                            if(it!=null)
                             emit(ForecastState.Success(it))
+                            else
+                                emit(ForecastState.Error("Error Found"))
                         }
                 } else emit(ForecastState.Error(response.message()))
             } catch (e: Exception) {
@@ -183,8 +198,8 @@ class WeatherRepository private constructor(
 
     }
 
-    suspend fun deleteProduct(product: FavData) {
-        weatherLocalDataSource.deleteProduct(product)
+    suspend fun deleteFavoriteData(product: FavData) {
+        weatherLocalDataSource.deleteFavoriteData(product)
     }
 
 
